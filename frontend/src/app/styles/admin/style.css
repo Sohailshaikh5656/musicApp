@@ -1,0 +1,465 @@
+* {
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  background: url("http://localhost:3300/uploads/adminBackImage.jpg") repeat;
+  background-size: auto;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+.header {
+    background: rgba(0, 0, 0, 0.25); /* ✅ Slight dark tint */
+    backdrop-filter: blur(12px) saturate(180%);
+    -webkit-backdrop-filter: blur(12px) sa  turate(180%);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2); /* ✅ Deep shadow */
+    padding: 20px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .header {
+    background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.15),
+        rgba(255, 255, 255, 0.05)
+    );
+    backdrop-filter: blur(12px) saturate(180%);
+    -webkit-backdrop-filter: blur(12px) saturate(180%);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+
+    
+}
+
+.header::before {
+    content: "";
+    position: absolute;
+    top: 20%;
+    left: 20%;
+    width: 8px;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+    filter: blur(1px);
+    animation: dropMove 6s infinite ease-in-out;
+}
+
+.header::after {
+    content: "";
+    position: absolute;
+    top: 60%;
+    left: 70%;
+    width: 6px;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    filter: blur(0.8px);
+    animation: dropMove 7s infinite ease-in-out reverse;
+}
+
+@keyframes dropMove {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+}
+
+  
+@supports (-webkit-backdrop-filter: none) or (backdrop-filter: none) {
+    .header {
+      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
+    }
+  }
+  nav, ul {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+li {
+    list-style: none;
+    color: rgb(43, 42, 42);
+    font-size: 1.2rem;
+    padding: 10px 10px;
+    width: 100%;
+    display: block;
+    box-sizing: border-box;
+    text-align : left;
+    cursor: pointer;
+}
+
+li:hover {
+    background: rgba(255, 255, 255, 0.2); /* Whitish tint with transparency */
+    backdrop-filter: blur(10px);          /* Glass effect */
+    -webkit-backdrop-filter: blur(10px);  /* Safari support */
+    border-radius: 10px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    border: 1px solid rgba(255, 255, 255, 0.3); /* Light border */
+    color: rgb(43, 42, 42);
+    border-radius: 10px;
+    position: relative;
+    z-index: 2;
+    color: black;
+}
+
+nav{
+    padding-top: 30px;
+    display: block;
+    flex-wrap: row;
+    justify-content: center;
+    align-items: left;
+    justify-items: left;
+}
+.sub-nav-bg a{
+    color: rgb(43, 42, 42);
+}
+.sub-nav-bg ul li{
+    font-size: 1.2rem;
+    padding: -3px;
+    color: rgb(43, 42, 42);
+}
+
+.sub-nav-bg ul li a{
+    color: rgb(43, 42, 42);
+}
+
+.sub-nav-bg:hover{
+    background: rgba(255, 255, 255, 0.2); /* Whitish tint with transparency */
+    backdrop-filter: blur(10px);          /* Glass effect */
+    -webkit-backdrop-filter: blur(10px);  /* Safari support */
+    border-radius: 10px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    border: 1px solid rgba(255, 255, 255, 0.3); /* Light border */
+    color: rgb(43, 42, 42);
+}
+
+.side-nav-image{
+    height: 35px;
+    border-radius: 50%;
+    border: 3px soild white;
+    box-shadow: 0px 4px 7px black;
+}
+.side-nav-image:hover{
+    box-shadow: 0px 4px 7px rgb(255, 105, 105);
+}
+.side-name{
+    padding-left: 10px;
+    text-transform: uppercase;
+    font-size: .8rem;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+.navbar{
+    display: flex;
+    background: rgba(255, 255, 255, 0.2); /* Whitish tint with transparency */
+    backdrop-filter: blur(10px);          /* Glass effect */
+    -webkit-backdrop-filter: blur(10px);  /* Safari support */
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    border: 1px solid rgba(255, 255, 255, 0.3); /* Light border */
+    padding: 10px;
+}
+.searchbar{
+    display: flex;
+    align-items: center;
+    justify-items: center;
+    justify-content: center;
+    width: 400px;
+    min-width: 100px;
+    gap: 15px;
+}
+.search-btn{
+    width: 60px;
+    font-weight: 700;
+}
+header {
+    display: flex;
+    justify-content: flex-end;
+}
+
+header ul, nav ul {
+    margin: 0;
+    padding: 0;
+    gap: 20px;  
+    padding-left: 0;
+    list-style: none;               /* spacing between li items */
+}
+header ul{
+    display: flex; 
+}
+header ul li{
+    display: inline;
+    transition: background .3s ease-in, border-radius .3s ease-in;
+    border: none;
+    text-align: center;
+}
+
+header ul li:hover{
+    background-color:#e348aa;
+    border-radius: 10px;
+    color: white;
+}
+
+  .no-style-link {
+    all: unset;              /* Reset all inherited styles */
+    cursor: pointer; 
+    width: 80px;      /* Optional - show pointer on hover */
+  }
+  
+  .no-style-link:hover {
+    all: unset;              /* Prevent hover effects */
+    cursor: pointer;         /* Keep pointer on hover */
+  }
+  .small-btn {
+    margin-top: 5px;
+    font-size: 12px !important;
+    width: 80px;
+  }
+  
+  .mainContent{
+    min-width: 100vh !important;
+    width : 100vh;
+  }
+
+  .adminForm {
+    background: rgba(255, 255, 255, 0.15); /* Transparent whitish tint */
+    backdrop-filter: blur(10px);          /* Glass effect */
+    -webkit-backdrop-filter: blur(10px);  /* Safari support */
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.2); 
+    color: rgb(43, 42, 42);
+
+    /* Advanced Neumorphic Shadow */
+    box-shadow: 
+      8px 8px 16px rgba(166, 180, 174, 0.4),
+      -8px -8px 16px rgba(255, 255, 255, 0.5),
+      inset 1px 1px 2px rgba(255, 255, 255, 0.2),
+      inset -1px -1px 2px rgba(166, 180, 174, 0.2);
+
+    transition: all 0.4s cubic-bezier(0.39, 0.575, 0.565, 1);
+    transform: translateY(0) scale(1);
+}
+
+.adminForm:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 
+    12px 12px 24px rgba(166, 180, 174, 0.5),
+    -12px -12px 24px rgba(255, 255, 255, 0.6),
+    inset 1px 1px 3px rgba(255, 255, 255, 0.3),
+    inset -1px -1px 3px rgba(166, 180, 174, 0.3);
+
+  filter: brightness(103%) drop-shadow(0 5px 10px rgba(168, 213, 186, 0.3));
+  border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+  .adminDeletebtn{
+    color:red;
+    margin-top: 10px;
+    margin-bottom: 10px
+  }
+  .adminEyeBtn{
+    color: #3b82f6;
+    padding: 10px;
+    border-radius: 30%;
+    margin-top: 10px;
+    margin-bottom: 10px
+  }
+  .adminEditBtn{
+    color:darkgreen;
+    padding: 10px;
+    border-radius: 30%;
+    margin-top: 10px;
+    margin-bottom: 10px
+  }
+  .adminBlockBtn {
+    color: #333333;
+    padding: 10px;
+    border-radius: 30%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    cursor: pointer; /* Add cursor pointer */
+    transition: background-color 0.3s ease; /* Add smooth transition */
+  }
+  .adminBlockBtn:hover {
+    background-color: lightcyan; /* Add hover effect */
+  }
+
+  .adminUnblockBtn {
+    color: green;
+    padding: 10px;
+    border-radius: 30%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  .adminUnblockBtn:hover {
+    background-color: lightgreen;
+  }
+
+  
+  .userIcons {
+    padding: 6px;
+    border-radius: 30%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .adminDeletebtn, .adminEyeBtn, adminEditBtn, adminBlockBtn{
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 30%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+
+  
+  .adminDeletebtn:hover, .adminEyeBtn:hover, .adminEditBtn:hover, adminBlockBtn:hover {
+    background-color: lightcyan;
+  }
+.artistEditImage{
+  width: '200px';
+  height: '200px';
+  object-fit: 'cover';
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  transition: all 0.3s ease;
+}
+.artistEditImage:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+  border: 2px solid rgba(255,255,255,0.2);
+}
+
+@keyframes borderSlide {
+  0% {
+    border-left: 0 solid transparent;
+  }
+  100% {
+    border-left: 10px solid rgba(0,0,0,0.3);
+  }
+}
+
+.imageUploadContainer {
+  position: relative;
+  width: 100%;
+  max-width: 300px;
+  margin: 20px auto;
+  padding: 20px;
+  border: 2px dashed #666;
+  border-radius: 10px;
+  text-align: center;
+  transition: all 0.3s ease;
+  background-color: #f0f8ff; /* Light blue background */
+}
+
+.imageUploadContainer:hover {
+  border-color: #333;
+  background-color: #e0f7ff; /* Slightly darker blue on hover */
+}
+
+.imageUploadLabel {
+  display: block;
+  cursor: pointer;
+  color: #444;
+  font-size: 16px;
+  transition: color 0.3s ease;
+}
+
+.imageUploadLabel:hover {
+  color: #222;
+}
+
+.imagePreview {
+  margin-top: 20px;
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease;
+  border: 1px dashed #ccc;
+}
+
+.imagePreview:hover {
+  transform: scale(1.02);
+}
+
+.uploadIcon {
+  font-size: 40px;
+  color: #666;
+  margin-bottom: 10px;
+  transition: color 0.3s ease;
+}
+
+.imageUploadContainer:hover .uploadIcon {
+  color: #444;
+}
+
+.uploadText {
+  font-size: 14px;
+  color: #777;
+  margin-top: 10px;
+}
+
+.imageContainerPre{
+  display: flex;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  justify-content: center;
+  align-items: center;
+  justify-items: center;
+  padding: 30px;
+  background-color: white;
+}
+.previewImageContainer{
+  height: 300px;
+  width: auto;
+}
+#artistList{
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  justify-items: center;
+  background-color: #fff;
+}
+
+.admin-playList-section{
+  background-color: #fff;
+  border-radius: 10px;
+  border: 2px double transparent;
+  box-shadow: 4px 3px 6px #252525;
+}
+.admin-playList-section img{
+  height: 70px;
+  width: auto;
+  border-radius: 50%;
+}
+
+.admin-playList-section img:hover{
+  z-index: 3;
+  box-shadow: 3px 3px 10px #252525;
+}
+.admin-playList-section:hover{
+  transform: translateY(-5px);
+  box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.3);
+}
+.song-card {
+  transition: all 0.3s ease-in-out;
+  cursor: pointer;
+  background-color: #fff;
+  padding: 0px 10px 10px 10px;
+}
+.song-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+}
+.song-card img:hover{
+  filter: brightness(0.7);
+}
+
