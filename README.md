@@ -21,7 +21,7 @@ Currently, the project is still in the **upgradation phase** 🚀.
 - **Backend:** 🌱 Node.js + Express  
 - **Database:** 🗄 MySQL  
 - **Authentication:** 🔑 JWT Token, Social Login  
-- **Other Tools:** 🎨 Bootstrap / Tailwind (UI), Nodemon (Dev), REST APIs
+- **Other Tools:** 🎨 Bootstrap, Nodemon (Dev), REST APIs
 
 ---
 
