@@ -69,7 +69,7 @@ Currently, the project is still in the **upgradation phase** 🚀.
 7. 🌍 Explore Genres, Stories & Podcasts
 8. ⭐ Featured Playlists
 
-🛠 Admin Features
+🛠 Admin Features<br/>
 1. 🎵 Song CRUD (Add, Update, Delete Songs)
 2. ⭐ Manage Featured Playlists
 3. 🎙 Manage Podcasts & Stories
@@ -77,10 +77,10 @@ Currently, the project is still in the **upgradation phase** 🚀.
 5. 🔑 Admin Authentication
 6. 📊 Dashboard & More Advanced Features
 
-🔮 Upcoming Features
-  👤 User Profile
-  🎶 View & Manage Liked Songs
-  💬 Comment Tracking
+🔮 Upcoming Features<br/>
+  👤 User Profile<br/>
+  🎶 View & Manage Liked Songs<br/>
+  💬 Comment Tracking<br/>
 
 📸 Project Screenshots & Demo\
 
