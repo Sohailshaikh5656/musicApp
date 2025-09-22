@@ -5,11 +5,13 @@
   <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/mysql/mysql-original-wordmark.svg" alt="MySQL Logo" width="100"/>
 </p>
 
-# 🎶 Music Listing App (Spotify/Gaana Clone)
+# 🎶 Music Listing App 
 
-This is a **Music Streaming & Listing App** 🎧 similar to **Spotify** and **Gaana**, created as my **learning project**.  
-The app includes both **Admin Panel** 🛠 and **User Panel** 👤, secured with **JWT Token Authentication** for login (supports both **normal login** and **social login**).  
-Currently, the project is in the **upgradation phase** 🚀.
+This is a **Music Streaming & Listing App** 🎧 inspired by platforms like **Spotify** and **Gaana**, but it is **not a clone**.  
+It’s my **own learning project** 👨‍💻 where I designed and built features for both **Admin Panel** 🛠 and **User Panel** 👤.  
+
+The app is powered by **JWT Token Authentication** 🔑 for secure login (supports both **normal login** and **social login**).  
+Currently, the project is still in the **upgradation phase** 🚀.
 
 ---
 
