@@ -40,16 +40,16 @@ cd backend
 npm install
 ```
 6. ⚛️ Go to frontend directory:
-   ```bash
+   ```
   cd frontend
   npm install
    ```
 7. ▶️ Run backend server:
-```bash
+```
 nodemon start
 ```
 8. ▶️ Run frontend:
-```bash
+```
   npm run dev
 # or
 npm run build
