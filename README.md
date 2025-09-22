@@ -77,10 +77,10 @@ Currently, the project is still in the **upgradation phase** 🚀.
   5. 🔑 Admin Authentication
   6. 📊 Dashboard & More Advanced Features
 
-🔮 Upcoming Features<br/>&nbps;
-  👤 User Profile<br/>&nbps;
-  🎶 View & Manage Liked Songs<br/>&nbps;
-  💬 Comment Tracking<br/>&nbps;
+🔮 Upcoming Features<br/>
+  👤 User Profile<br/>
+  🎶 View & Manage Liked Songs<br/>
+  💬 Comment Tracking<br/>
 
 📸 Project Screenshots & Demo\
 
