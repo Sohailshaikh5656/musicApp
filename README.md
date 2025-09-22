@@ -35,25 +35,25 @@ Currently, the project is still in the **upgradation phase** 🚀.
 ```
 4. 🗄 Setup MySQL Database → Import the provided db.sql file
 5. ⚙️ Go to backend directory:
-```
-cd backend
-npm install
+```bash
+  cd backend
+  npm install
 ```
 6. ⚛️ Go to frontend directory:
-   ```
+```bash
   cd frontend
   npm install
-   ```
-7. ▶️ Run backend server:
 ```
-nodemon start
+7. ▶️ Run backend server:
+```bash
+  nodemon start
 ```
 8. ▶️ Run frontend:
 ```
   npm run dev
-# or
-npm run build
- ```
+  # or
+  npm run build
+```
 
 9.🌐 Open frontend URL in your browser.
 ⚠️ Note: Run backend & frontend in separate terminals.
