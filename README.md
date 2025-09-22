@@ -31,7 +31,7 @@ Currently, the project is still in the **upgradation phase** 🚀.
 2. ⚡ **Install Node.js**
 3. ⬇️ Download or clone this repo:
 ```bash
-   git clone https://github.com/Sohailshaikh5656/musicApp.git```
+   git clone https://github.com/Sohailshaikh5656/musicApp.git
 4. 🗄 Setup MySQL Database → Import the provided db.sql file
 5. ⚙️ Go to backend directory:
 ```bash
