@@ -55,11 +55,11 @@ Currently, the project is still in the **upgradation phase** 🚀.
   npm run build
 ```
 
-9.🌐 Open frontend URL in your browser.
+9.🌐 Open frontend URL in your browser.<br/>
 ⚠️ Note: Run backend & frontend in separate terminals.
 
-🌟 Features
-👤 User Features
+🌟 Features<br/>
+👤 User Features<br/>
 1. 🔑 Sign In & Sign Up (Normal + Social Login)
 2. 🎵 Music Listing with Lyrics
 3. ❤️ Like Songs, 💬 Comment on Tracks
