@@ -4,7 +4,7 @@ import { Column } from 'primereact/column';
 import { useState, useEffect, useRef } from "react"
 import { useRouter } from "next/navigation"
 import { useSession } from "next-auth/react"
-import { getAllUserPlayList } from "@/app/utils/apiHandler"
+import { getAllUserPlayList } from '@/app/utils/adminApi';
 import { ToastContainer, toast } from 'react-toastify';
 
 import Layout from '@/app/admin/common/layout';

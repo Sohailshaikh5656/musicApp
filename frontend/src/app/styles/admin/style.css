@@ -463,3 +463,79 @@ header ul li:hover{
   filter: brightness(0.7);
 }
 
+/* Glassy shining cards */
+.dashboard-card {
+  border: none;
+  border-radius: 15px;
+  color: #000;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Shine hover effect */
+.dashboard-card::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    120deg,
+    rgba(255, 255, 255, 0.2) 0%,
+    rgba(255, 255, 255, 0.1) 40%,
+    rgba(255, 255, 255, 0) 60%
+  );
+  transform: rotate(25deg);
+  animation: shine 6s infinite linear;
+}
+
+@keyframes shine {
+  0% {
+    transform: translateX(-100%) rotate(25deg);
+  }
+  100% {
+    transform: translateX(100%) rotate(25deg);
+  }
+}
+
+/* Hover Zoom */
+.dashboard-card:hover {
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.3);
+}
+
+/* Different gradients */
+.bg-users {
+  background: linear-gradient(135deg, #2196f3, #6dd5ed, #ffffff);
+}
+.bg-songs {
+  background: linear-gradient(135deg, #ff6f61, #ffb88c, #ffffff);
+}
+.bg-artists {
+  background: linear-gradient(135deg, #66bb6a, #c8e6c9, #ffffff);
+}
+.bg-categories {
+  background: linear-gradient(135deg, #ffca28, #ffe082, #ffffff);
+}
+.bg-playlists {
+  background: linear-gradient(135deg, #7e57c2, #b39ddb, #ffffff);
+}
+
+.sidebar-custom {
+  position: sticky;  /* fixed ke jagah sticky use karo */
+  top: 0;
+  height: 100vh;     /* full height */
+  overflow-y: auto;  /* scroll aaye agar jyada content ho */
+}
+.nav-link-custom {
+  font-size: 14px;   /* thoda chhota */
+  text-decoration: none !important; /* underline hatao */
+}
+
+.nav-items ul li a {
+  font-size: 13px;   /* sub-menu aur chhota */
+  text-decoration: none !important;
+}

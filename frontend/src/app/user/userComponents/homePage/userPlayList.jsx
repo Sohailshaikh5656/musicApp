@@ -16,6 +16,8 @@ const UserPlayList = () => {
     const [filePreview, setFilePreview] = useState(null);
     const [btn, setBtn] = useState(false)
     const {data:session} = useSession()
+    const [dialog, setDialog] = useState()
+    const[DialogBool, setDialogBool] = useState(false)
     const router = useRouter()
 
     const fetchPlayList = async() =>{
@@ -119,6 +121,10 @@ const UserPlayList = () => {
             theme: "light",
         });
     }
+    const editPlayList=(data)=>{
+        
+    }
+
 
     return (
         <>
@@ -258,7 +264,7 @@ const UserPlayList = () => {
 
                         <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
                             {playlists.map((playlist, index) => (
-                                <div key={index} className="col" onClick={()=>{router.push(`/user/playList/${playlist.id}`)}}>
+                                <div key={index} className="col">
                                     <div className="card h-100 shadow-sm border-0 overflow-hidden transition-all hover-shadow">
                                         <div className="position-relative overflow-hidden">
                                             <img
@@ -267,10 +273,24 @@ const UserPlayList = () => {
                                                 className="card-img-top object-fit-cover"
                                                 style={{ height: "200px" }}
                                             />
-                                            <div className="position-absolute top-0 end-0 m-2">
+                                            <div className="position-absolute top-0 end-0 m-2 d-flex gap-2" style={{ zIndex: 1 }}>
                                                 <button
                                                     className="btn btn-sm btn-light rounded-circle shadow-sm"
                                                     onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        e.preventDefault();
+                                                        router.push(`/user/editPlayList/${playlist.id}`)
+                                                    }}
+                                                    title="Edit playlist"
+                                                >
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#0d6efd" viewBox="0 0 16 16">
+                                                        <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"/>
+                                                    </svg>
+                                                </button>
+                                                <button
+                                                    className="btn btn-sm btn-light rounded-circle shadow-sm"
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
                                                         e.preventDefault();
                                                         deletePlaylist(index);
                                                     }}
@@ -293,9 +313,15 @@ const UserPlayList = () => {
                                         <div className="card-body">
                                             <h5 className="card-title fw-bold text-truncate">{playlist.name}</h5>
                                             <div className="d-flex justify-content-between align-items-center mt-3">
-                                                <button className="btn btn-outline-primary btn-sm rounded-pill">
+                                                <a 
+                                                    className="btn btn-outline-danger btn-sm rounded-pill"
+                                                    onClick={(e) => {
+                                                        router.push(`/user/playList/${playlist.id}`);
+                                                    }}
+                                                    style={{ position: 'relative', zIndex: 2 }} // Added z-index to make button clickable above hover effects
+                                                >
                                                     Play
-                                                </button>
+                                                </a>
                                                 <div className="text-muted small">
                                                     {playlist.created_at}
                                                 </div>

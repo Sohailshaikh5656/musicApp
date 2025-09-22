@@ -111,7 +111,126 @@ const GetMethod = async(endpoint, data) => {
             if(typeof window !== 'undefined') {
                 // Clear any existing token or session data
                 localStorage.removeItem('admin_token');
-                window.location.href = '/admin/login';
+                window.location.href = '/user/signin';
+            }
+            return;
+        }
+        return error;
+    }
+}
+
+const PutMethod = async(endpoint, data) => {
+    try{
+        // const adminToken = request.cookies.get('admin_token')?.value
+        let encryptedData = encrypt(data)
+        // const res = await apiClient.post(`admin/${endpoint}`, encryptedData)
+        let res;
+        if(data?.jwtToken){
+            const token = data?.jwtToken
+            delete data?.jwtToken
+            encryptedData = encrypt(data)
+            res = await apiClient.put(`user/${endpoint}`, encryptedData,{
+                headers : {
+                    'jwt_token' : token
+                }
+            })
+        }else{
+            res = await apiClient.put(`user/${endpoint}`, encryptedData)
+        }
+        // Check if response data exists and is in the expected format
+        if (!res || !res.data) {
+            throw new Error("Invalid response from server")
+        }
+        if(res.statusCode == 401){
+            throw new Error("Invalid Token Provided")
+        }
+        // Decrypt the response data
+        const decryptedData = decrypt(res.data)
+        console.log("Decrypted Data:", decryptedData)
+        // Parse the decrypted JSON
+        let result
+        try {
+            result = JSON.parse(decryptedData)
+        } catch (parseError) {
+            console.error("Failed to parse JSON:", parseError)
+            throw new Error("Invalid response format from server")
+        }
+        console.log("The Received Data from Backend:", result)
+        return result
+    }catch(error){
+        return error
+    }
+}
+
+const DeleteMethod = async(endpoint, data) => {
+    try {
+        let res;
+        let token = data;
+        
+        // Build endpoint with parameters
+        if (typeof data === 'object' && data !== null) {
+            for (const key in data) {
+                if (data.hasOwnProperty(key)) {
+                    console.log(`${key}: ${data[key]}`);
+                    if(key != "jwtToken") {
+                        endpoint += `/${data[key]}`
+                    }
+                }
+            }
+        }
+        console.log("End Point : ", endpoint);
+
+        // Validate token presence
+        if(!token?.jwtToken) {
+            throw new Error("Invalid Token or token Not Found");
+        }
+
+        // Make API call with token
+        res = await apiClient.delete(`user/${endpoint}`, {
+            headers: {
+                'jwt_token': token?.jwtToken
+            }
+        });
+
+        // Handle backend token validation response
+        if (!res || !res.data) {
+            throw new Error("Invalid response from server");
+        }
+        
+        // Handle token expiration from backend
+        if(res.statusCode === 401) {
+            console.log("Token expired, redirecting to login...");
+            if(typeof window !== 'undefined') {
+                // Clear any existing token or session data
+                localStorage.removeItem('admin_token');
+                window.location.href = '/user/signup';
+            }
+            return;
+        }
+
+        // Process successful response
+        const decryptedData = decrypt(res.data);
+        console.log("Decrypted Data:", decryptedData);
+        
+        let result;
+        try {
+            result = JSON.parse(decryptedData);
+        } catch (parseError) {
+            console.error("Failed to parse JSON:", parseError);
+            throw new Error("Invalid response format from server");
+        }
+        
+        console.log("The Received Data from Backend:", result);
+        return result;
+        
+    } catch(error) {
+        // Handle token expiration from backend
+        if(error.response?.status === 401) {
+            console.log("Token expired, redirecting to login...");
+            if(typeof window !== 'undefined') {
+                // Clear any existing token or session data
+                localStorage.removeItem('admin_token');
+                window.location.href = '/user/signin';
             }
             return;
         }
@@ -406,6 +525,15 @@ export const getAllPlayList = async(data)=>{
     const res = await GetMethod("playlist",data);
     return res
 }
+export const updatePlaylist = async(data)=>{
+    const res = await PutMethod("playlist",data);
+    return res
+}
+export const removeSongFromPlayList = async(data)=>{
+    const res = await DeleteMethod("playlist",data);
+    return res
+}
+
 export const getPlayListSongs = async(data)=>{
     const res = await GetMethod("playlist-songs",data);
     return res

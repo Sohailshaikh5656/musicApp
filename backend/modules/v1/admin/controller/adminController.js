@@ -348,21 +348,21 @@ class adminController{
             return middleware.encriptData(req,res,error.message)
         }
     }
-    async updateFeaturePlayList(req, res) {
-        try {
-            let requestData = req.body;
-            const featuredPlaylistValidation = validationRules.updatefeaturedPlaylistValidation;
-            const {error, value} = featuredPlaylistValidation.validate(requestData);
-            if(error){
-                console.log("Validation Error :", error.details);
-                return middleware.encriptData(req, res, { error: error.details[0].message });
-            }
-            let message = await adminModel.updateFeaturePlayList(requestData);
-            return middleware.encriptData(req,res,message);
-        } catch(error) {
-            return middleware.encriptData(req,res,error.message);
-        }
-    }
+    // async updateFeaturePlayList(req, res) {
+    //     try {
+    //         let requestData = req.body;
+    //         const featuredPlaylistValidation = validationRules.updatefeaturedPlaylistValidation;
+    //         const {error, value} = featuredPlaylistValidation.validate(requestData);
+    //         if(error){
+    //             console.log("Validation Error :", error.details);
+    //             return middleware.encriptData(req, res, { error: error.details[0].message });
+    //         }
+    //         let message = await adminModel.updateFeaturePlayList(requestData);
+    //         return middleware.encriptData(req,res,message);
+    //     } catch(error) {
+    //         return middleware.encriptData(req,res,error.message);
+    //     }
+    // }
 
     async deleteFeaturePlayList(req, res) {
         try {
@@ -400,8 +400,120 @@ class adminController{
             return middleware.encriptData(req, res, error.message);
         }
     }
+    async updateFeaturedPlayList(req,res){
+        try {
+            let requestData = req.body
+            let message = await adminModel.updateFeaturedPlayList(requestData);
+            return middleware.encriptData(req, res, message);
+        } catch (error) {
+            return middleware.encriptData(req, res, error.message);
+        }
+        
+    }
 
-   
+
+    //PodCast 
+    async addPodCast(req,res){
+        try {
+            let requestData = req.body
+            const PodCastValidation = validationRules.validatePodCast;
+            const {error, value} = PodCastValidation.validate(requestData);
+            if(error){
+                console.log("Validation Error :", error.details);
+                return middleware.encriptData(req, res, { error: error.details[0].message });
+            }
+            let message = await adminModel.addPodCast(requestData);
+            return middleware.encriptData(req, res, message);
+        } catch (error) {
+            return middleware.encriptData(req, res, error.message);
+        }
+    }
+
+     async getAllPodCast(req,res){
+        try {
+            let requestData = {}
+            if(req.params.id) requestData.id = req.params.id
+            let message = await adminModel.getAllPodCast(requestData);
+            return middleware.encriptData(req, res, message);
+        } catch (error) {
+            return middleware.encriptData(req, res, error.message);
+        }
+        
+    }
+
+    async updatePodCast(req,res){
+        try {
+            let requestData = req.body
+            let message = await adminModel.updatePodCast(requestData);
+            return middleware.encriptData(req, res, message);
+        } catch (error) {
+            return middleware.encriptData(req, res, error.message);
+        }
+    }
+
+    async deletePodCast(req,res){
+        try {
+            let requestData = {}
+            requestData.id = req.params.id
+            let message = await adminModel.deletePodCast(requestData);
+            return middleware.encriptData(req, res, message);
+        } catch (error) {
+            return middleware.encriptData(req, res, error.message);
+        }
+    }
+    async addStory(req,res){
+        try {
+            let requestData = req.body
+            requestData.admin_id = req?.admin_id
+            const validateStory = validationRules.validateStory;
+            const {error, value} = validateStory.validate(requestData);
+            if(error){
+                console.log("Validation Error :", error.details);
+                return middleware.encriptData(req, res, { error: error.details[0].message });
+            }
+            let message = await adminModel.addStory(requestData);
+            return middleware.encriptData(req, res, message);
+        } catch (error) {
+            return middleware.encriptData(req, res, error.message);
+        }
+    }
+    async getAllStory(req,res){
+        try {
+            console.log("Request Params : ",req.params)
+            let requestData = {}
+            if(req.params.id) requestData.id = req.params.id
+            let message = await adminModel.getAllStory(requestData);
+            return middleware.encriptData(req, res, message);
+        } catch (error) {
+            return middleware.encriptData(req, res, error.message);
+        }
+    }
+    async updateStory(req,res){
+        try {
+            let requestData = req.body
+            const validateUpdateStory = validationRules.validateUpdateStory;
+            const {error, value} = validateUpdateStory.validate(requestData);
+            if(error){
+                console.log("Validation Error :", error.details);
+                return middleware.encriptData(req, res, { error: error.details[0].message });
+            }
+            if(req?.admin_id)requestData.admin_id = req?.admin_id
+            let message = await adminModel.updateStory(requestData);
+            return middleware.encriptData(req, res, message);
+        } catch (error) {
+            return middleware.encriptData(req, res, error.message);
+        }
+    }
+    async deleteStory(req,res){
+        try {
+            let requestData = {}
+            requestData.id = req.params.id
+            let message = await adminModel.deleteStory(requestData);
+            return middleware.encriptData(req, res, message);
+        } catch (error) {
+            return middleware.encriptData(req, res, error.message);
+        }
+    }
 }
 
 module.exports = new adminController()

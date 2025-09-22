@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react"
 import { useSession } from "next-auth/react"
 import { useParams, useRouter } from "next/navigation"
-import { getAllPlayList, addSongToPlayList } from "@/app/utils/apiHandler"
+import { getAllPlayList, addSongToPlayList } from "@/app/utils/userApi"
 import Layout from "../../common/layout"
 
 const ShowPlayListPage = () => {

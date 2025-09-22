@@ -1,15 +1,16 @@
 "use client"
 import { useState, useEffect } from "react"
-import { getCategory, uploadImage } from "@/app/utils/apiHandler"
+import { uploadImage } from "@/app/utils/apiHandler"
 import { useParams } from "next/navigation"
 import { useSession } from "next-auth/react"
 import { useFormik } from "formik"
 import * as Yup from 'yup'
-import { updateCategory } from "@/app/utils/apiHandler"
+import { updateCategory } from "@/app/utils/adminApi"
 import { useRouter } from "next/navigation"
 import Layout from "../../common/layout"
 import Image from "next/image"
 import { ToastContainer, toast } from "react-toastify"
+import { getCategory } from "@/app/utils/adminApi"
 
 const EditCategory = () => {
     const params = useParams()

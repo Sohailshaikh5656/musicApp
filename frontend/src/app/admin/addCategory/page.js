@@ -4,10 +4,10 @@ import *as Yup from 'yup'
 import { useState, useEffect } from "react"
 import Layout from "../common/layout"
 import { Audio } from "react-loader-spinner"
-import { addCategory } from '@/app/utils/apiHandler'
 import { uploadImage } from "@/app/utils/apiHandler"
 import { useSession } from 'next-auth/react'
 import { ToastContainer, toast } from "react-toastify"
+import { addCategory } from "@/app/utils/adminApi"
 
 const AddCategory = () => {
     const [btn , setBtn] = useState(false)

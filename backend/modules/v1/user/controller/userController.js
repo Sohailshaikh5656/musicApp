@@ -161,7 +161,30 @@ class userController {
           try{
                let requestData = {};
                requestData.user_id = req.user_id
+               if(req.params.id) requestData.id = req.params.id
                let message = await userModel.getAllPlayList(requestData);
+               return middleware.encriptData(req,res,message)
+          }catch(error){
+               return middleware.encriptData(req,res,error.message)
+          }
+     }
+     async updatePlaylist(req,res){
+          try{
+               let requestData = req.body;
+               let message = await userModel.updatePlaylist(requestData);
+               return middleware.encriptData(req,res,message)
+          }catch(error){
+               return middleware.encriptData(req,res,error.message)
+          }
+     }
+
+     async deletePlayListSongs(req,res){
+          try{
+               let requestData = {};
+               requestData.user_id = req.user_id;
+               requestData.song_id = req.params.song_id
+               requestData.playlist_id = req.params.playlist_id
+               let message = await userModel.deletePlayListSongs(requestData);
                return middleware.encriptData(req,res,message)
           }catch(error){
                return middleware.encriptData(req,res,error.message)
@@ -351,6 +374,94 @@ class userController {
                let requestData = {}
                requestData.user_id = req.user_id
                let message = await userModel.homePage(requestData);
+               return middleware.encriptData(req, res, message)
+          } catch (error) {
+               console.log("Something went Wrong : ", error.message)
+               return middleware.encriptData(req, res, error.message)
+          }
+     }
+     async getAllPodCast(req, res) {
+          try {
+               let requestData = {}
+               requestData.user_id = req.user_id
+               if(req.params.id)requestData.id = req.params.id;
+               if(req.params.recommended) requestData.recommended = req.params.recommended
+               let message = await userModel.getAllPodCast(requestData);
+               return middleware.encriptData(req, res, message)
+          } catch (error) {
+               console.log("Something went Wrong : ", error.message)
+               return middleware.encriptData(req, res, error.message)
+          }
+     }
+     //All Stories with Recommended
+     async getAllStory(req, res) {
+          try {
+               let requestData = {}
+               requestData.user_id = req.user_id
+               requestData.id = req.params.id;
+               let message = await userModel.getAllStory(requestData);
+               return middleware.encriptData(req, res, message)
+          } catch (error) {
+               console.log("Something went Wrong : ", error.message)
+               return middleware.encriptData(req, res, error.message)
+          }
+     }
+     async getGenereSongs(req, res) {
+          try {
+               let requestData = {}
+               requestData.user_id = req.user_id
+               requestData.id = req.params.id;
+               let message = await userModel.getGenereSongs(requestData);
+               return middleware.encriptData(req, res, message)
+          } catch (error) {
+               console.log("Something went Wrong : ", error.message)
+               return middleware.encriptData(req, res, error.message)
+          }
+     }
+     async getAllArtist(req, res) {
+          try {
+               let requestData = {}
+               requestData.user_id = req.user_id
+               if(req.params.id)requestData.id = req.params.id;
+               let message = await userModel.getAllArtist(requestData);
+               return middleware.encriptData(req, res, message)
+          } catch (error) {
+               console.log("Something went Wrong : ", error.message)
+               return middleware.encriptData(req, res, error.message)
+          }
+     }
+     async getGenere(req, res) {
+          try {
+               let requestData = {}
+               requestData.user_id = req.user_id
+               if(req.params.id)requestData.id = req.params.id;
+               let message = await userModel.getGenere(requestData);
+               return middleware.encriptData(req, res, message)
+          } catch (error) {
+               console.log("Something went Wrong : ", error.message)
+               return middleware.encriptData(req, res, error.message)
+          }
+     }
+     async artistSongs(req, res) {
+          try {
+               let requestData = {}
+               console.log("Params Called !",req.params)
+               requestData.user_id = req.user_id
+               if(req.params.id)requestData.id = req.params.id;
+               let message = await userModel.artistSongs(requestData);
+               return middleware.encriptData(req, res, message)
+          } catch (error) {
+               console.log("Something went Wrong : ", error.message)
+               return middleware.encriptData(req, res, error.message)
+          }
+     }
+     async discover(req, res) {
+          try {
+               let requestData = {}
+               console.log("Params Called !",req.params)
+               requestData.user_id = req.user_id
+               if(req.params.id)requestData.id = req.params.id;
+               let message = await userModel.discover(requestData);
                return middleware.encriptData(req, res, message)
           } catch (error) {
                console.log("Something went Wrong : ", error.message)

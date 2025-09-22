@@ -1,5 +1,5 @@
 "use client"
-import { AddFeaturePlayList } from "@/app/utils/apiHandler"
+import { addFeaturePlayList } from "@/app/utils/adminApi"
 import { useEffect, useState } from "react"
 import { Formik, useFormik } from "formik"
 import * as Yup from "yup"
@@ -9,7 +9,8 @@ import Layout from "../common/layout"
 import { Audio } from "react-loader-spinner"
 import { uploadImage } from "@/app/utils/apiHandler"
 import { ToastContainer, toast } from "react-toastify"
-import { getCategory } from "@/app/utils/apiHandler"
+import { getCategory } from "@/app/utils/adminApi"
+getCategory
 
 const AddFeaturedPlayListPage = () =>{
     const [file, setFile] = useState()
@@ -70,7 +71,7 @@ const AddFeaturedPlayListPage = () =>{
                 }
                 playListData.jwtToken = session?.user?.jwtToken
                 console.log("playListData #####################",playListData)
-                let response = await AddFeaturePlayList(playListData)
+                let response = await addFeaturePlayList(playListData)
                 if(response.code == 1){
                     setFile(null)
                     notify("New PlayList Created !")

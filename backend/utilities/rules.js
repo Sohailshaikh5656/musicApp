@@ -117,6 +117,45 @@ const validateSong = Joi.object({
     is_featured : Joi.number().optional()
 
 })
+
+const validatePodCast = Joi.object({
+    title:Joi.string().min(3).required(),
+    taken_by:Joi.string().min(3).required(),
+    description : Joi.string().min(8).required(),
+    duration : Joi.number().required(),
+    video : Joi.string().required(),
+    thumbnail : Joi.string().required(),
+})
+const validateStory = Joi.object({
+    title:Joi.string().min(3).required(),
+    star_name:Joi.string().min(3).required(),
+    description : Joi.string().min(8).required(),
+    admin_id:Joi.number().optional()
+})
+
+const validateUpdateStory = Joi.object({
+  state: Joi.number().optional(),
+  is_active: Joi.number().optional(),
+  id : Joi.number().required(),
+  title: Joi.when("state", {
+    is: Joi.exist(), // agar state diya hai
+    then: Joi.string().min(3).optional(),
+    otherwise: Joi.string().min(3).required()
+  }),
+
+  star_name: Joi.when("state", {
+    is: Joi.exist(),
+    then: Joi.string().min(3).optional(),
+    otherwise: Joi.string().min(3).required()
+  }),
+
+  description: Joi.when("state", {
+    is: Joi.exist(),
+    then: Joi.string().min(8).optional(),
+    otherwise: Joi.string().min(8).required()
+  })
+});
+
 module.exports = {
     newUser, 
     validateUser,
@@ -130,5 +169,8 @@ module.exports = {
     artistValidation,
     updateArtistRule,
     validateCategory,
-    validateSong
+    validateSong,
+    validatePodCast,
+    validateStory,
+    validateUpdateStory
 }

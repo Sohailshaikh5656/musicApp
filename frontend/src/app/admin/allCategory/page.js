@@ -1,9 +1,10 @@
 "use client"
 import { useState, useEffect } from "react"
-import { getCategory, updateCategory } from "@/app/utils/apiHandler"
+// import { getCategory, updateCategory } from "@/app/utils/apiHandler"
+import { getCategory, updateCategory } from "@/app/utils/adminApi"
 import { useSession } from "next-auth/react"
 import Layout from "../common/layout"
-import { deleteCategory } from "@/app/utils/apiHandler"
+import { deleteCategory } from "@/app/utils/adminApi"
 import { useRef } from "react"
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';

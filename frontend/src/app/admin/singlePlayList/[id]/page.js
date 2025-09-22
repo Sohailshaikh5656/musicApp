@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import Layout from "@/app/admin/common/layout"
 import { ToastContainer, toast } from 'react-toastify';
-import { getUserPlayListSongs, deletePlayListSong } from "@/app/utils/apiHandler"
+import { getUserPlayListSongs, deletePlayListSong } from "@/app/utils/adminApi"
 const SinglePlayList = () => {
     const { data: session } = useSession()
     const searchRef = useRef(null)

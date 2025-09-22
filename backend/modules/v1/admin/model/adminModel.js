@@ -4,21 +4,21 @@ const common = require("../../../../utilities/common");
 const { OPERATION_FAILED } = require("../../../../utilities/responseCode");
 const jwt = require('jsonwebtoken');
 
-class adminModel{
-    constructor(){}
+class adminModel {
+    constructor() { }
 
-    async signin(requestData){
-        try{
-            const [result] = await database.query("SELECT * FROM tbl_admin WHERE email = ? AND is_active=1 AND is_deleted=0",[requestData.email])
-            if(result.length<=0){
+    async signin(requestData) {
+        try {
+            const [result] = await database.query("SELECT * FROM tbl_admin WHERE email = ? AND is_active=1 AND is_deleted=0", [requestData.email])
+            if (result.length <= 0) {
                 return {
                     code: responseCode.NO_DATA_FOUND,
                     keyword: "email not found",
                     data: "Email Not Found or Entered Wrong Email"
                 }
             }
-            const hasedPassword = await common.comparePasswords(requestData.password,result[0].password);
-            if(!hasedPassword){
+            const hasedPassword = await common.comparePasswords(requestData.password, result[0].password);
+            if (!hasedPassword) {
                 return {
                     code: responseCode.OPERATION_FAILED,
                     keyword: "password not matched",
@@ -36,7 +36,7 @@ class adminModel{
                 keyword: "success",
                 data: result[0]
             }
-        }catch(error){
+        } catch (error) {
             return {
                 code: responseCode.OPERATION_FAILED,
                 keyword: "something_went_wrong",
@@ -45,77 +45,77 @@ class adminModel{
         }
     }
 
-    async addArtist(requestData){
-        try{
+    async addArtist(requestData) {
+        try {
             const artist = {
-                name : requestData.name,
-                bio : requestData.bio,
-                profile_picture : requestData.profile_picture
+                name: requestData.name,
+                bio: requestData.bio,
+                profile_picture: requestData.profile_picture
             }
-            const [checkArtist] = await database.query("SELECT * FROM tbl_artist WHERE name = ? AND bio = ? AND is_active = 1 AND is_deleted=0",[requestData.name, requestData.bio])
-            if(checkArtist.length>0){
+            const [checkArtist] = await database.query("SELECT * FROM tbl_artist WHERE name = ? AND bio = ? AND is_active = 1 AND is_deleted=0", [requestData.name, requestData.bio])
+            if (checkArtist.length > 0) {
                 return {
-                    code : OPERATION_FAILED,
-                    keyword : "Artist Already Exits",
-                    data : "Artist Already Exits !"
+                    code: OPERATION_FAILED,
+                    keyword: "Artist Already Exits",
+                    data: "Artist Already Exits !"
                 }
             }
-            const [result] = await database.query("INSERT INTO tbl_artist SET ?",artist)
-            if(result.affectedRows <=0 ){
+            const [result] = await database.query("INSERT INTO tbl_artist SET ?", artist)
+            if (result.affectedRows <= 0) {
                 return {
-                    code : OPERATION_FAILED,
-                    keyword : "error_in_inserting",
-                    data : "Failed to Insertee ! 0 Row Affected !"
+                    code: OPERATION_FAILED,
+                    keyword: "error_in_inserting",
+                    data: "Failed to Insertee ! 0 Row Affected !"
                 }
             }
             return {
-                code : responseCode.SUCCESS,
-                keyword : "success",
-                data : `Artist Added Successfully !`
+                code: responseCode.SUCCESS,
+                keyword: "success",
+                data: `Artist Added Successfully !`
             }
-        }catch(error){
-            return{
-                code : OPERATION_FAILED,
-                keyword : "something_went_wrong",
-                data : `Error : ${error}`
+        } catch (error) {
+            return {
+                code: OPERATION_FAILED,
+                keyword: "something_went_wrong",
+                data: `Error : ${error}`
             }
         }
     }
 
-    async AllArtist(requestData){
-        try{
+    async AllArtist(requestData) {
+        try {
             let [result] = await database.query("SELECT * FROM tbl_artist WHERE is_deleted=0 ORDER BY id DESC")
-            if(result.length <= 0){
+            if (result.length <= 0) {
                 return {
-                    code : responseCode.NO_DATA_FOUND,
-                    keyword : "no data found",
-                    data : "No Data Found ! Empty"
+                    code: responseCode.NO_DATA_FOUND,
+                    keyword: "no data found",
+                    data: "No Data Found ! Empty"
                 }
             }
             return {
-                code : responseCode.SUCCESS,
-                keyword : "success",
-                data : result
+                code: responseCode.SUCCESS,
+                keyword: "success",
+                data: result
             }
-        }catch(error){
+        } catch (error) {
             return {
-                code:OPERATION_FAILED,
-                keyword : "something_went_wrong",
-                data : error.data || error
+                code: OPERATION_FAILED,
+                keyword: "something_went_wrong",
+                data: error.data || error
             }
         }
     }
-    async updateArtist(requestData){
-        try{
+    async updateArtist(requestData) {
+        try {
             const artistData = {
-                name : requestData.name,
-                bio : requestData.bio,
+                name: requestData.name,
+                bio: requestData.bio,
             }
-            if(requestData?.profile_picture){
+            if (requestData?.profile_picture) {
                 artistData.profile_picture = requestData.profile_picture
             }
-            const [result] = await database.query("UPDATE tbl_artist SET ? WHERE id = ?",[artistData,requestData.id]);
-            if(result.affectedRows <=0){
+            const [result] = await database.query("UPDATE tbl_artist SET ? WHERE id = ?", [artistData, requestData.id]);
+            if (result.affectedRows <= 0) {
                 return {
                     code: responseCode.OPERATION_FAILED,
                     keyword: "update_failed",
@@ -127,7 +127,7 @@ class adminModel{
                 keyword: "success",
                 data: "Artist information updated successfully"
             }
-        }catch(error){
+        } catch (error) {
             return {
                 code: responseCode.OPERATION_FAILED,
                 keyword: "error_occurred",
@@ -136,23 +136,23 @@ class adminModel{
         }
     }
 
-    async getArtist(requestData){
-        try{
-            console.log("This is Artist ID : ",requestData)
-        const [result] = await database.query("SELECT * FROM tbl_artist WHERE id = ?", [requestData.id]);
-        if(result.length <= 0){
-            return {
-                code: responseCode.NO_DATA_FOUND,
-                keyword: "artist_not_found",
-                data: "Artist not found with the given ID"
+    async getArtist(requestData) {
+        try {
+            console.log("This is Artist ID : ", requestData)
+            const [result] = await database.query("SELECT * FROM tbl_artist WHERE id = ?", [requestData.id]);
+            if (result.length <= 0) {
+                return {
+                    code: responseCode.NO_DATA_FOUND,
+                    keyword: "artist_not_found",
+                    data: "Artist not found with the given ID"
+                }
             }
-        }
-        return {
-            code: responseCode.SUCCESS,
-            keyword: "success",
-            data: result[0]
-        }
-        }catch(error){
+            return {
+                code: responseCode.SUCCESS,
+                keyword: "success",
+                data: result[0]
+            }
+        } catch (error) {
             return {
                 code: responseCode.OPERATION_FAILED,
                 keyword: "error_occurred",
@@ -161,72 +161,47 @@ class adminModel{
         }
     }
 
-    async AllUsers(requestData){
-        try{
+    async AllUsers(requestData) {
+        try {
             const [result] = await database.query(`SELECT * FROM tbl_user WHERE is_deleted=0`);
-            if(result.length<=0){
-                return{
-                    code : responseCode.NO_DATA_FOUND,
-                    keyword : "error_in_fetching",
-                    data : "No Data Found"
+            if (result.length <= 0) {
+                return {
+                    code: responseCode.NO_DATA_FOUND,
+                    keyword: "error_in_fetching",
+                    data: "No Data Found"
                 }
             }
             delete result.password
-            return{
-                code : responseCode.SUCCESS,
-                keyword : "User Found Successful;ly !",
-                data : result
-            }
-        }catch(error){
             return {
-                code : OPERATION_FAILED,
-                keyword : "something_went_wrong",
-                data : error.data || error
+                code: responseCode.SUCCESS,
+                keyword: "User Found Successful;ly !",
+                data: result
+            }
+        } catch (error) {
+            return {
+                code: OPERATION_FAILED,
+                keyword: "something_went_wrong",
+                data: error.data || error
             }
         }
     }
 
-    async deleteUser(requestData){
-        try{
+    async deleteUser(requestData) {
+        try {
             const [result] = await database.query("UPDATE tbl_user SET is_deleted = 1 WHERE id = ?", requestData.id);
-            if(result.affectedRows<=0){
+            if (result.affectedRows <= 0) {
                 return {
-                    code : OPERATION_FAILED,
-                    keyword : "error_in_deleting",
-                    data : "Error in Deleting Query !"
+                    code: OPERATION_FAILED,
+                    keyword: "error_in_deleting",
+                    data: "Error in Deleting Query !"
                 }
             }
             return {
-                code : responseCode.SUCCESS,
-                keyword : "success",
-                data:"User Deleted Successfully !"
+                code: responseCode.SUCCESS,
+                keyword: "success",
+                data: "User Deleted Successfully !"
             }
-        }catch(error){
-            return{
-                code:responseCode.OPERATION_FAILED,
-                keyword : "something_went_wrong",
-                data : error || error.data || "Something Went Wrong"
-            }
-        }
-    }
-
-
-    async userBlockAndUnBlock(requestData){
-        try{
-            const [result] = await database.query("UPDATE tbl_user SET is_active = ? WHERE id = ?", [requestData.is_active == 1 ? 0 : 1, requestData.id]);
-            if(result.affectedRows<=0){
-                return {
-                    code : OPERATION_FAILED,
-                    keyword : "error_in_blocking",
-                    data : "Error in Blocking Query !"
-                }
-            }
-            return {
-                code : responseCode.SUCCESS,
-                keyword : "success",
-                data: requestData.is_active ? "User Blocked Successfully !" : "User Unblocked Successfully !"
-            }
-        }catch(error){
+        } catch (error) {
             return {
                 code: responseCode.OPERATION_FAILED,
                 keyword: "something_went_wrong",
@@ -235,463 +210,488 @@ class adminModel{
         }
     }
 
-    async getUser(requestData){
-        
-    }
-    async editUser(requestData){
-        try{
-            console.log("Edit User : ",requestData.id)
-            const [result] = await database.query("SELECT * FROM tbl_user WHERE id = ?", requestData.id);
-            if(result.length <= 0){
+
+    async userBlockAndUnBlock(requestData) {
+        try {
+            const [result] = await database.query("UPDATE tbl_user SET is_active = ? WHERE id = ?", [requestData.is_active == 1 ? 0 : 1, requestData.id]);
+            if (result.affectedRows <= 0) {
                 return {
-                    code : responseCode.NO_DATA_FOUND,
-                    keyword : "No Data Found",
-                    data : "No Data Found || There no user with this ID !"
+                    code: OPERATION_FAILED,
+                    keyword: "error_in_blocking",
+                    data: "Error in Blocking Query !"
+                }
+            }
+            return {
+                code: responseCode.SUCCESS,
+                keyword: "success",
+                data: requestData.is_active ? "User Blocked Successfully !" : "User Unblocked Successfully !"
+            }
+        } catch (error) {
+            return {
+                code: responseCode.OPERATION_FAILED,
+                keyword: "something_went_wrong",
+                data: error || error.data || "Something Went Wrong"
+            }
+        }
+    }
+
+    async getUser(requestData) {
+
+    }
+    async editUser(requestData) {
+        try {
+            console.log("Edit User : ", requestData.id)
+            const [result] = await database.query("SELECT * FROM tbl_user WHERE id = ?", requestData.id);
+            if (result.length <= 0) {
+                return {
+                    code: responseCode.NO_DATA_FOUND,
+                    keyword: "No Data Found",
+                    data: "No Data Found || There no user with this ID !"
                 }
             }
             delete result[0].password
             return {
-                code : responseCode.SUCCESS,
-                keyword : "success",
-                data : result[0]
+                code: responseCode.SUCCESS,
+                keyword: "success",
+                data: result[0]
             }
-        }catch(error){
-            return{
-                code : responseCode.OPERATION_FAILED,
-                keyword : "something_went_wrong",
-                data : error
+        } catch (error) {
+            return {
+                code: responseCode.OPERATION_FAILED,
+                keyword: "something_went_wrong",
+                data: error
             }
         }
     }
-    async updateUser(requestData){
-        try{
+    async updateUser(requestData) {
+        try {
             const userData = {
-                name : requestData.name,
-                email : requestData.email,
-                username : requestData.username
+                name: requestData.name,
+                email: requestData.email,
+                username: requestData.username
             }
-            const [result] = await database.query("UPDATE tbl_user SET ? WHERE id = ?",[userData,requestData.id]);
-            if(result.affectedRows<=0){
-                return{
-                    code : responseCode.SUCCESS,
-                    keyword : "success",
-                    data : "user has upadated"
-                }
-            }
-        }catch(error){
-            return{
-                code : OPERATION_FAILED,
-                keyword : "something_went_wrong",
-                data : error
-            }
-        }
-    }
-
-    async deleteArtist(requestData){
-        try{
-            const [result] = await database.query("UPDATE tbl_artist SET is_deleted = 1 WHERE id = ?",[requestData.id])
-            if(result.affectedRows<=0){
+            const [result] = await database.query("UPDATE tbl_user SET ? WHERE id = ?", [userData, requestData.id]);
+            if (result.affectedRows <= 0) {
                 return {
-                    code : OPERATION_FAILED,
-                    keyword : "error_in_deleting",
-                    data : "Errror in Deleting Song Artist !"
+                    code: responseCode.SUCCESS,
+                    keyword: "success",
+                    data: "user has upadated"
                 }
             }
-            
-            return{
-                code : responseCode.SUCCESS,
-                keyword : "success",
-                data : "Artist Deleted Succefully !"
-            }
-        }catch(error){
+        } catch (error) {
             return {
-                code : responseCode.OPERATION_FAILED,
-                keyword : "something_went_wrong",
-                data : error
-            }
-        }
-    }
-    async blockArtist(requestData){
-        try{
-            console.log("There is Data : ",requestData)
-            // Convert is_active to number if it's a string
-            const currentStatus = typeof requestData.is_active === 'string' ? 
-                parseInt(requestData.is_active) : 
-                requestData.is_active;
-            // Toggle the status
-            requestData.is_active = currentStatus === 1 ? 0 : 1;
-            console.log("To Be Enter in Data base : ", requestData.is_active);
-            const [result] = await database.query("UPDATE tbl_artist SET is_active = ? WHERE id = ?",[requestData.is_active,requestData.id])
-            if(result.affectedRows<=0){
-                return {
-                    code : OPERATION_FAILED,
-                    keyword : "error_in_deleting",
-                    data : "Errror in Deleting Song Artist !"
-                }
-            }
-            if(requestData.is_active){
-                return{
-                    code : responseCode.SUCCESS,
-                    keyword : "success",
-                    data : "Artist Blocked Successfully !"
-                }
-            }else{
-                return{
-                    code : responseCode.SUCCESS,
-                    keyword : "success",
-                    data : "Artist UnBlock Operation Done !"
-                }
-            }
-        }catch(error){
-            return {
-                code : responseCode.OPERATION_FAILED,
-                keyword : "something_went_wrong",
-                data : error
-            }
-        }
-    }
-    async addcategory(requestData){
-        const categoryData = {
-            name : requestData.name,
-            image : requestData.image
-        }
-        try{
-            const [result] = await database.query("INSERT INTo tbl_category SET ?",categoryData);
-            if(result.affectedRows<=0){
-                return {
-                    code : OPERATION_FAILED,
-                    keyword : "error_in_inserting",
-                    data : "Error in Inserting Category !"
-                }
-            }
-            return {
-                code : responseCode.SUCCESS,
-                keyword : "success",
-                data : "Category Added Suceessfully !"
-            }
-        }catch(error){
-            return{
-                code:OPERATION_FAILED,
-                keyword:"something_went_wrong",
-                data:error
-            }
-        }
-    }
-
-    async getCategory(requestData){
-        try{
-            const result  = await common.getCategory(requestData)
-            return result
-        }catch(error){
-            return{
-                code:OPERATION_FAILED,
-                keyword:"something_went_wrong",
-                data:error
-            }
-        }
-    }
-    async getAllCategory(requestData){
-        try{
-            requestData.role == "admin"
-            const result  = await common.getAllCategory(requestData)
-            return result
-        }catch(error){
-            return{
-                code:OPERATION_FAILED,
-                keyword:"something_went_wrong",
-                data:error
-            }
-        }
-    }
-
-    async updateCategory(requestData){
-        console.log("################Ths update Method is Called !##########")
-        try{
-            let updateCategoryData = {}
-            if(requestData.image){
-                updateCategoryData.image = requestData.image
-            }
-            if(requestData.name){
-                updateCategoryData.name = requestData.name
-            }
-            if(requestData.is_active!=undefined){
-                requestData.is_active = parseInt(requestData.is_active)
-                updateCategoryData.is_active = requestData.is_active?0:1
-            }
-            const [result] = await database.query("UPDATE tbl_category SET ? WHERE id = ?",[updateCategoryData, requestData.id])
-            if(result.affectedRows<=0){
-                return{
-                    code : OPERATION_FAILED,
-                    keyword : "No Row Affected !",
-                    data : "Error in Editing or Deleting Data"
-                }
-            }
-            if(updateCategoryData.is_active !== undefined){
-                return{
-                    code : responseCode.SUCCESS,
-                    keyword : updateCategoryData.is_active ? "category_unblocked" : "category_blocked",
-                    data : updateCategoryData.is_active ? "Category Unblocked Successfully!" : "Category Blocked Successfully!"
-                }
-            }else{
-                return {
-                    code : responseCode.SUCCESS,
-                    keyword : "category_updated",
-                    data : "Category Updated Successfully!"
-                }
-            }
-        }catch(error){
-            return{
-                code:OPERATION_FAILED,
-                keyword:"something_went_wrong",
-                data:error
-            }
-        }
-    }
-    async deleteCategory(requestData){
-        try{
-            const [result] = await database.query("UPDATE tbl_category SET is_deleted = 1 WHERE id = ?",[requestData.id])
-            if(result.affectedRows<=0){
-                return{
-                    code : OPERATION_FAILED,
-                    keyword : "No Row Affected !",
-                    data : "Error in Deleteing Data : "
-                }
-            }
-            return {
-                code : responseCode.SUCCESS,
-                keyword : "category_deleted",
-                date : "Category Deleted Successfully !"
-            }
-        }catch(error){
-            return{
-                code:OPERATION_FAILED,
-                keyword:"something_went_wrong",
-                data:error
-            }
-        }
-    }
-
-    async addSong(requestData){
-        try{
-            let responseData = {}
-            const songData = {
-                category_id : requestData.category_id,
-                title : requestData.title,
-                album_name : requestData.album_name,
-                song : requestData.song,
-                cover_image : requestData.cover_image,
-                lyrics : requestData.lyrics,
-                duration : requestData.duration,
-                BPM : requestData.BPM,
-                language : requestData.language,
-                explicit : requestData.explicit,
-                release_date : requestData.release_date,
-                copyright_info : requestData.copyright_info,
-                mood : requestData.mood,
-                is_featured : requestData.is_featured?1:0,
-                play_count : 0,
-                download_count:0,
-                total_likes : 0,
-                total_comments : 0,
-            }
-            const [result] = await database.query("INSERT INTo tbl_song SET ?",songData);
-            if(result.affectedRows <=0){
-                return{
-                    code: OPERATION_FAILED,
-                    keyword : "errror_in_inserting",
-                    data : "Error in Inserting Song in to Database",
-                }
-            }
-            const songId = result.insertId;
-            for(let i = 0; i < requestData.artist_id.length; i++){
-                const singerData = {
-                    artist_id : requestData.artist_id[i],
-                    song_id : songId
-                }
-                let [insertArtist] = await database.query("INSERT INTO tbl_artist_songs SET ?",singerData)
-                if(insertArtist.affectedRows<=0){
-                    return {
-                        code : OPERATION_FAILED,
-                        keyword : "error_in_inserting",
-                        data : "Error || Error in Inserting Singer Junction Table"
-                    }
-                }
-            }
-            let tags = requestData.tags;
-            tags = tags.split(/[,\s#]+/).filter(tag => tag.trim() !== "");
-            for(let i=0; i<tags.length;i++){
-                const tagsData = {
-                    song_id : songId,
-                    tag : tags[i]
-                }
-                let [insertedTags] = await database.query("INSERT INTO tbl_tags SET ?",tagsData)
-                if(insertedTags.affectedRows <=0){
-                    return {
-                        code : OPERATION_FAILED,
-                        keyword : "error_in_inserting",
-                        data : "Error || Error in Inserting Tags"
-                    }
-                }
-            }
-            let temp = {id :songId, msg :"Song Added Successfully !"}
-            Object.assign(temp,songData)
-            responseData.songData = temp,
-            responseData.artist_id = requestData.artist_id
-            requestData.tags = tags
-            return {
-                code : responseCode.SUCCESS,
-                keyword : "success",
-                data : responseData
-            }
-        }catch(error){
-            return{
                 code: OPERATION_FAILED,
-                keyword: "something_went_wrong || model Error", 
+                keyword: "something_went_wrong",
                 data: error
             }
         }
     }
 
-    async getAllSong(requestData){
-        try{
-            console.log("THE SONG METHOD CALLED")
-            requestData.role == "admin"
-            const result = await common.getAllSong(requestData)
-            console.log("This is Data : ",result)
-            if(result.length<=0){
+    async deleteArtist(requestData) {
+        try {
+            const [result] = await database.query("UPDATE tbl_artist SET is_deleted = 1 WHERE id = ?", [requestData.id])
+            if (result.affectedRows <= 0) {
                 return {
-                    code: responseCode.NO_DATA_FOUND,
-                    keyword : "No data Found",
-                    data : "No Data Found || No Song Found"
+                    code: OPERATION_FAILED,
+                    keyword: "error_in_deleting",
+                    data: "Errror in Deleting Song Artist !"
                 }
             }
-            return{
-                code : responseCode.SUCCESS,
-                keyword:"success",
-                data : result
+
+            return {
+                code: responseCode.SUCCESS,
+                keyword: "success",
+                data: "Artist Deleted Succefully !"
             }
-        }catch(error){
-            return{
-                code : OPERATION_FAILED,
-                keyword : "something_went_wrong",
-                data : error
+        } catch (error) {
+            return {
+                code: responseCode.OPERATION_FAILED,
+                keyword: "something_went_wrong",
+                data: error
             }
         }
     }
-    async updateSong(requestData){
-        try{
-            console.log("This is Actual Data : ",requestData)
+    async blockArtist(requestData) {
+        try {
+            console.log("There is Data : ", requestData)
+            // Convert is_active to number if it's a string
+            const currentStatus = typeof requestData.is_active === 'string' ?
+                parseInt(requestData.is_active) :
+                requestData.is_active;
+            // Toggle the status
+            requestData.is_active = currentStatus === 1 ? 0 : 1;
+            console.log("To Be Enter in Data base : ", requestData.is_active);
+            const [result] = await database.query("UPDATE tbl_artist SET is_active = ? WHERE id = ?", [requestData.is_active, requestData.id])
+            if (result.affectedRows <= 0) {
+                return {
+                    code: OPERATION_FAILED,
+                    keyword: "error_in_deleting",
+                    data: "Errror in Deleting Song Artist !"
+                }
+            }
+            if (requestData.is_active) {
+                return {
+                    code: responseCode.SUCCESS,
+                    keyword: "success",
+                    data: "Artist Blocked Successfully !"
+                }
+            } else {
+                return {
+                    code: responseCode.SUCCESS,
+                    keyword: "success",
+                    data: "Artist UnBlock Operation Done !"
+                }
+            }
+        } catch (error) {
+            return {
+                code: responseCode.OPERATION_FAILED,
+                keyword: "something_went_wrong",
+                data: error
+            }
+        }
+    }
+    async addcategory(requestData) {
+        const categoryData = {
+            name: requestData.name,
+            image: requestData.image
+        }
+        try {
+            const [result] = await database.query("INSERT INTo tbl_category SET ?", categoryData);
+            if (result.affectedRows <= 0) {
+                return {
+                    code: OPERATION_FAILED,
+                    keyword: "error_in_inserting",
+                    data: "Error in Inserting Category !"
+                }
+            }
+            return {
+                code: responseCode.SUCCESS,
+                keyword: "success",
+                data: "Category Added Suceessfully !"
+            }
+        } catch (error) {
+            return {
+                code: OPERATION_FAILED,
+                keyword: "something_went_wrong",
+                data: error
+            }
+        }
+    }
+
+    async getCategory(requestData) {
+        try {
+            const result = await common.getCategory(requestData)
+            return result
+        } catch (error) {
+            return {
+                code: OPERATION_FAILED,
+                keyword: "something_went_wrong",
+                data: error
+            }
+        }
+    }
+    async getAllCategory(requestData) {
+        try {
+            requestData.role == "admin"
+            const result = await common.getAllCategory(requestData)
+            return result
+        } catch (error) {
+            return {
+                code: OPERATION_FAILED,
+                keyword: "something_went_wrong",
+                data: error
+            }
+        }
+    }
+
+    async updateCategory(requestData) {
+        console.log("################Ths update Method is Called !##########")
+        try {
+            let updateCategoryData = {}
+            if (requestData.image) {
+                updateCategoryData.image = requestData.image
+            }
+            if (requestData.name) {
+                updateCategoryData.name = requestData.name
+            }
+            if (requestData.is_active != undefined) {
+                requestData.is_active = parseInt(requestData.is_active)
+                updateCategoryData.is_active = requestData.is_active ? 0 : 1
+            }
+            const [result] = await database.query("UPDATE tbl_category SET ? WHERE id = ?", [updateCategoryData, requestData.id])
+            if (result.affectedRows <= 0) {
+                return {
+                    code: OPERATION_FAILED,
+                    keyword: "No Row Affected !",
+                    data: "Error in Editing or Deleting Data"
+                }
+            }
+            if (updateCategoryData.is_active !== undefined) {
+                return {
+                    code: responseCode.SUCCESS,
+                    keyword: updateCategoryData.is_active ? "category_unblocked" : "category_blocked",
+                    data: updateCategoryData.is_active ? "Category Unblocked Successfully!" : "Category Blocked Successfully!"
+                }
+            } else {
+                return {
+                    code: responseCode.SUCCESS,
+                    keyword: "category_updated",
+                    data: "Category Updated Successfully!"
+                }
+            }
+        } catch (error) {
+            return {
+                code: OPERATION_FAILED,
+                keyword: "something_went_wrong",
+                data: error
+            }
+        }
+    }
+    async deleteCategory(requestData) {
+        try {
+            const [result] = await database.query("UPDATE tbl_category SET is_deleted = 1 WHERE id = ?", [requestData.id])
+            if (result.affectedRows <= 0) {
+                return {
+                    code: OPERATION_FAILED,
+                    keyword: "No Row Affected !",
+                    data: "Error in Deleteing Data : "
+                }
+            }
+            return {
+                code: responseCode.SUCCESS,
+                keyword: "category_deleted",
+                date: "Category Deleted Successfully !"
+            }
+        } catch (error) {
+            return {
+                code: OPERATION_FAILED,
+                keyword: "something_went_wrong",
+                data: error
+            }
+        }
+    }
+
+    async addSong(requestData) {
+        try {
+            let responseData = {}
+            const songData = {
+                category_id: requestData.category_id,
+                title: requestData.title,
+                album_name: requestData.album_name,
+                song: requestData.song,
+                cover_image: requestData.cover_image,
+                lyrics: requestData.lyrics,
+                duration: requestData.duration,
+                BPM: requestData.BPM,
+                language: requestData.language,
+                explicit: requestData.explicit,
+                release_date: requestData.release_date,
+                copyright_info: requestData.copyright_info,
+                mood: requestData.mood,
+                is_featured: requestData.is_featured ? 1 : 0,
+                play_count: 0,
+                download_count: 0,
+                total_likes: 0,
+                total_comments: 0,
+            }
+            const [result] = await database.query("INSERT INTo tbl_song SET ?", songData);
+            if (result.affectedRows <= 0) {
+                return {
+                    code: OPERATION_FAILED,
+                    keyword: "errror_in_inserting",
+                    data: "Error in Inserting Song in to Database",
+                }
+            }
+            const songId = result.insertId;
+            for (let i = 0; i < requestData.artist_id.length; i++) {
+                const singerData = {
+                    artist_id: requestData.artist_id[i],
+                    song_id: songId
+                }
+                let [insertArtist] = await database.query("INSERT INTO tbl_artist_songs SET ?", singerData)
+                if (insertArtist.affectedRows <= 0) {
+                    return {
+                        code: OPERATION_FAILED,
+                        keyword: "error_in_inserting",
+                        data: "Error || Error in Inserting Singer Junction Table"
+                    }
+                }
+            }
+            let tags = requestData.tags;
+            tags = tags.split(/[,\s#]+/).filter(tag => tag.trim() !== "");
+            for (let i = 0; i < tags.length; i++) {
+                const tagsData = {
+                    song_id: songId,
+                    tag: tags[i]
+                }
+                let [insertedTags] = await database.query("INSERT INTO tbl_tags SET ?", tagsData)
+                if (insertedTags.affectedRows <= 0) {
+                    return {
+                        code: OPERATION_FAILED,
+                        keyword: "error_in_inserting",
+                        data: "Error || Error in Inserting Tags"
+                    }
+                }
+            }
+            let temp = { id: songId, msg: "Song Added Successfully !" }
+            Object.assign(temp, songData)
+            responseData.songData = temp,
+                responseData.artist_id = requestData.artist_id
+            requestData.tags = tags
+            return {
+                code: responseCode.SUCCESS,
+                keyword: "success",
+                data: responseData
+            }
+        } catch (error) {
+            return {
+                code: OPERATION_FAILED,
+                keyword: "something_went_wrong || model Error",
+                data: error
+            }
+        }
+    }
+
+    async getAllSong(requestData) {
+        try {
+            console.log("THE SONG METHOD CALLED")
+            requestData.role == "admin"
+            const result = await common.getAllSong(requestData)
+            console.log("This is Data : ", result)
+            if (result.length <= 0) {
+                return {
+                    code: responseCode.NO_DATA_FOUND,
+                    keyword: "No data Found",
+                    data: "No Data Found || No Song Found"
+                }
+            }
+            return {
+                code: responseCode.SUCCESS,
+                keyword: "success",
+                data: result
+            }
+        } catch (error) {
+            return {
+                code: OPERATION_FAILED,
+                keyword: "something_went_wrong",
+                data: error
+            }
+        }
+    }
+    async updateSong(requestData) {
+        try {
+            console.log("This is Actual Data : ", requestData)
             let id = requestData.id;
             delete requestData.id
             const artistIds = requestData.artist_id
             delete requestData.artist_id
-            if(requestData.is_active != undefined){
-                requestData.is_active = requestData.is_active?0:1
-                let [result] = await database.query("UPDATE tbl_song SET ? WHERE id = ?",[requestData,id])
-                if(result.affectedRows<=0){
-                    return{
-                        code : OPERATION_FAILED,
-                        keyword : "error_in_updating",
-                        data : `Error | failed to ${requestData.is_active?"UnBlock" : "Block"} Song`
+            if (requestData.is_active != undefined) {
+                requestData.is_active = requestData.is_active ? 0 : 1
+                let [result] = await database.query("UPDATE tbl_song SET ? WHERE id = ?", [requestData, id])
+                if (result.affectedRows <= 0) {
+                    return {
+                        code: OPERATION_FAILED,
+                        keyword: "error_in_updating",
+                        data: `Error | failed to ${requestData.is_active ? "UnBlock" : "Block"} Song`
                     }
-                }else{
-                    return{
-                        code : responseCode.SUCCESS,
-                        keyword : "success",
-                        data : `Song has been ${requestData.is_active?"UnBlocked":"Block"} sucessfully !`
+                } else {
+                    return {
+                        code: responseCode.SUCCESS,
+                        keyword: "success",
+                        data: `Song has been ${requestData.is_active ? "UnBlocked" : "Block"} sucessfully !`
                     }
                 }
-            }else{
-                let [result] = await database.query("UPDATE tbl_song SET ? WHERE id = ?",[requestData,id])
-                if(result.affectedRows<=0){
-                    return{
-                        code : OPERATION_FAILED,
-                        keyword : "error_in_updating",
-                        data : `Error | failed to update Song`
-                    }
-                }else{
+            } else {
+                let [result] = await database.query("UPDATE tbl_song SET ? WHERE id = ?", [requestData, id])
+                if (result.affectedRows <= 0) {
                     return {
-                        code : responseCode.SUCCESS,
-                        keyword : "success",
-                        data : `Song has been updated sucessfully !`
+                        code: OPERATION_FAILED,
+                        keyword: "error_in_updating",
+                        data: `Error | failed to update Song`
+                    }
+                } else {
+                    return {
+                        code: responseCode.SUCCESS,
+                        keyword: "success",
+                        data: `Song has been updated sucessfully !`
                     }
                 }
             }
-        }catch(error){
-            console.log("Error",error)
+        } catch (error) {
+            console.log("Error", error)
             return {
-                code : OPERATION_FAILED,
-                keyword : "something_went_wrong",
-                data : error
+                code: OPERATION_FAILED,
+                keyword: "something_went_wrong",
+                data: error
             }
         }
     }
-    async getSong(requestData){
-        try{
+    async getSong(requestData) {
+        try {
             let sql = `SELECT s.*, 
                       (SELECT GROUP_CONCAT(t.tag SEPARATOR ', ') 
                        FROM tbl_tags as t 
                        WHERE t.song_id = s.id) as tag 
                       FROM tbl_song as s 
                       WHERE s.id = ? AND s.is_deleted=0`
-            const[result] = await database.query(sql,[requestData.id])
-            const [artist] = await database.query("SELECT a.* FROM tbl_artist as a JOIN tbl_artist_songs as ats ON a.id = ats.artist_id WHERE ats.song_id = ? ",requestData.id)
+            const [result] = await database.query(sql, [requestData.id])
+            const [artist] = await database.query("SELECT a.* FROM tbl_artist as a JOIN tbl_artist_songs as ats ON a.id = ats.artist_id WHERE ats.song_id = ? ", requestData.id)
 
-            if(result.length<=0){
+            if (result.length <= 0) {
                 return {
-                    code : responseCode.NO_DATA_FOUND,
-                    keyword : "not_found",
-                    data : "Error in Founding Data ! No result found"
+                    code: responseCode.NO_DATA_FOUND,
+                    keyword: "not_found",
+                    data: "Error in Founding Data ! No result found"
                 }
             }
-            if(artist.length<=0){
+            if (artist.length <= 0) {
                 return {
-                    code : responseCode.NO_DATA_FOUND,
-                    keyword : "not_found",
-                    data : "Error in Founding Data ! No result found"
+                    code: responseCode.NO_DATA_FOUND,
+                    keyword: "not_found",
+                    data: "Error in Founding Data ! No result found"
                 }
             }
             result[0].artist = artist
             return {
-                code : responseCode.SUCCESS,
-                keyword : "success",
-                data : result[0]
+                code: responseCode.SUCCESS,
+                keyword: "success",
+                data: result[0]
             }
-        }catch(error){
+        } catch (error) {
             return {
-                code : OPERATION_FAILED,
-                keyword : "something_went_wrong",
-                data : error
+                code: OPERATION_FAILED,
+                keyword: "something_went_wrong",
+                data: error
             }
         }
     }
 
-    async getAllPlayList(requestData){
-        try{
-            const [result] = await database.query("SELECT p.*, DATE_FORMAT(p.created_at, '%D %M, %Y') as created_at, (SELECT COUNT(*) FROM tbl_playlist_song as ps WHERE ps.playlist_id = p.id) as songs FROM tbl_playlist as p WHERE p.user_id=?",[requestData.user_id])
-            if(result.length<=0){
+    async getAllPlayList(requestData) {
+        try {
+            const [result] = await database.query("SELECT p.*, DATE_FORMAT(p.created_at, '%D %M, %Y') as created_at, (SELECT COUNT(*) FROM tbl_playlist_song as ps WHERE ps.playlist_id = p.id) as songs FROM tbl_playlist as p WHERE p.user_id=?", [requestData.user_id])
+            if (result.length <= 0) {
                 return {
-                    code : responseCode.NO_DATA_FOUND,
-                    keyword : "not_found",
-                    data : "No Data Found || No Play List Found !"
+                    code: responseCode.NO_DATA_FOUND,
+                    keyword: "not_found",
+                    data: "No Data Found || No Play List Found !"
                 }
             }
             return {
-                code : responseCode.SUCCESS,
-                keyword : "success",
+                code: responseCode.SUCCESS,
+                keyword: "success",
                 data: result
             }
-        }catch(error){
-            return{
-                code : OPERATION_FAILED,
-                keyword : "something_went_wrong",
-                data : error
+        } catch (error) {
+            return {
+                code: OPERATION_FAILED,
+                keyword: "something_went_wrong",
+                data: error
             }
         }
     }
 
-    async getPlayListSongs(requestData){
-        try{
+    async getPlayListSongs(requestData) {
+        try {
             let [result] = await database.query(
                 `SELECT p.* FROM tbl_playlist as p WHERE p.id = ? AND p.is_active=1 AND p.is_deleted = 0`,
                 [requestData.id]
@@ -705,256 +705,288 @@ class adminModel{
                 JOIN tbl_song as s ON s.id = ps.song_id
                 JOIN tbl_artist_songs as arsng ON arsng.song_id = s.id
                 JOIN tbl_artist as a ON a.id = arsng.artist_id
-                WHERE ps.playlist_id = ? AND ps.is_active=1 AND ps.is_deleted=0`,[requestData.id]
+                WHERE ps.playlist_id = ? AND ps.is_active=1 AND ps.is_deleted=0`, [requestData.id]
             )
-            if(result.length<=0){
+            if (result.length <= 0) {
                 return {
-                    code : responseCode.NO_DATA_FOUND,
-                    keyword : "not_found",
-                    data : "No PlayList Found with Thsis ID"
+                    code: responseCode.NO_DATA_FOUND,
+                    keyword: "not_found",
+                    data: "No PlayList Found with Thsis ID"
                 }
             }
             result = result[0]
-            if(songs.length<=0){
+            if (songs.length <= 0) {
                 result.songs = "No Song Found ! An Empty Play List"
-                return{
-                    code : responseCode.NO_DATA_FOUND,
-                    keyword : "not_found",
+                return {
+                    code: responseCode.NO_DATA_FOUND,
+                    keyword: "not_found",
                     data: result,
                 }
             }
             result.songs = songs
             return {
-                code : responseCode.SUCCESS,
-                keyword : "success",
-                data : result,
-                songs : songs
+                code: responseCode.SUCCESS,
+                keyword: "success",
+                data: result,
+                songs: songs
             }
-        }catch(error){
-            return{
-                code : OPERATION_FAILED,
-                keyword : "something_went_wrong",
-                data : error
+        } catch (error) {
+            return {
+                code: OPERATION_FAILED,
+                keyword: "something_went_wrong",
+                data: error
             }
         }
     }
 
-    async deletePlayListSong(requestData){
-        try{
-            const [result] = await database.query(`UPDATE tbl_playlist_song SET is_deleted = 1 WHERE playlist_id = ? AND song_id = ?`,[requestData.id, requestData.song_id])
-            if(result.affectedRows<=0){
+    async deletePlayListSong(requestData) {
+        try {
+            const [result] = await database.query(`UPDATE tbl_playlist_song SET is_deleted = 1 WHERE playlist_id = ? AND song_id = ?`, [requestData.id, requestData.song_id])
+            if (result.affectedRows <= 0) {
                 return {
-                    code : OPERATION_FAILED,
-                    keyword : "error_in_deleting",
-                    data : "Error in Deleting Song from Playlist"
+                    code: OPERATION_FAILED,
+                    keyword: "error_in_deleting",
+                    data: "Error in Deleting Song from Playlist"
                 }
             }
             return {
-                code : responseCode.SUCCESS,
-                keyword : "success",
-                data : "Song Deleted From the PlayList "
+                code: responseCode.SUCCESS,
+                keyword: "success",
+                data: "Song Deleted From the PlayList "
             }
-        }catch(error){
-            return{
-                code : OPERATION_FAILED,
-                keyword : "something_went_wrong",
-                data : error
+        } catch (error) {
+            return {
+                code: OPERATION_FAILED,
+                keyword: "something_went_wrong",
+                data: error
             }
         }
     }
 
-    async getAllUserPlayList(requestData){
-        try{
+    async getAllUserPlayList(requestData) {
+        try {
             const [result] = await database.query(`
                 SELECT u.*, p.*, p.id as id, (SELECT COUNT(*) FROM tbl_playlist_song as ps WHERE ps.playlist_id = p.id AND ps.is_active=1 AND ps.is_deleted=0) as total_songs FROM tbl_playlist as p JOIN tbl_user as u WHERE u.id = p.user_id
             `)
-            if(result.length<=0){
+            if (result.length <= 0) {
                 return {
-                    code : responseCode.NO_DATA_FOUND,
-                    keyword : "no_data_found",
-                    data : "No PlayList Found ! || Empty Playlist"
+                    code: responseCode.NO_DATA_FOUND,
+                    keyword: "no_data_found",
+                    data: "No PlayList Found ! || Empty Playlist"
                 }
             }
             return {
-                code : responseCode.SUCCESS,
-                keyword : "success",
-                data : result
+                code: responseCode.SUCCESS,
+                keyword: "success",
+                data: result
             }
-        }catch(error){
+        } catch (error) {
             return {
-                code : OPERATION_FAILED,
-                keyword : "something_went_wrong",
-                data : error
+                code: OPERATION_FAILED,
+                keyword: "something_went_wrong",
+                data: error
             }
         }
     }
 
-    async newFeaturedPlayList(requestData){
-        try{
+    async newFeaturedPlayList(requestData) {
+        try {
             const playList = {
-                name : requestData.name,
-                description : requestData.description,
-                image : requestData.image,
-                category_id : requestData.category_id
+                name: requestData.name,
+                description: requestData.description,
+                image: requestData.image,
+                category_id: requestData.category_id
             }
             const [result] = await database.query("INSERT INTO tbl_featured_playlist SET ?", playList)
-            if(result.affectedRows <= 0){
+            if (result.affectedRows <= 0) {
                 return {
-                    code : OPERATION_FAILED,
-                    keyword : "error_in_inserting",
-                    data : "Error in Creating Featured PlayList"
+                    code: OPERATION_FAILED,
+                    keyword: "error_in_inserting",
+                    data: "Error in Creating Featured PlayList"
                 }
             }
             return {
-                code : responseCode.SUCCESS,
-                keyword : "success", 
-                data : "Featured PlayList Created Successfully"
+                code: responseCode.SUCCESS,
+                keyword: "success",
+                data: "Featured PlayList Created Successfully"
             }
-        }catch(error){
-            return{
-                code : OPERATION_FAILED,
-                keyword : "something_went_wrong",
-                data : error
-            }
-        }
-    }
-    async updateFeaturePlayList(requestData){
-        try{
-            const playList = {
-                name : requestData.name,
-                description : requestData.description,
-                image : requestData.image,
-                category_id : requestData.category_id
-            }
-            const [result] = await database.query("UPDATE tbl_featured_playlist SET ? WHERE id = ? AND is_active = 1 AND is_deleted=0", [playList, requestData.id])
-            if(result.affectedRows <= 0){
-                return {
-                    code : OPERATION_FAILED,
-                    keyword : "error_in_updating",
-                    data : "Error in Updating Featured PlayList"
-                }
-            }
+        } catch (error) {
             return {
-                code : responseCode.SUCCESS,
-                keyword : "success", 
-                data : "Featured PlayList Updated Successfully"
-            }
-        }catch(error){
-            return{
-                code : OPERATION_FAILED,
-                keyword : "something_went_wrong",
-                data : error
+                code: OPERATION_FAILED,
+                keyword: "something_went_wrong",
+                data: error
             }
         }
     }
+    // async updateFeaturePlayList(requestData) {
+    //     try {
+    //         const playList = {
+    //             name: requestData.name,
+    //             description: requestData.description,
+    //             image: requestData.image,
+    //             category_id: requestData.category_id
+    //         }
+    //         const [result] = await database.query("UPDATE tbl_featured_playlist SET ? WHERE id = ? AND is_active = 1 AND is_deleted=0", [playList, requestData.id])
+    //         if (result.affectedRows <= 0) {
+    //             return {
+    //                 code: OPERATION_FAILED,
+    //                 keyword: "error_in_updating",
+    //                 data: "Error in Updating Featured PlayList"
+    //             }
+    //         }
+    //         return {
+    //             code: responseCode.SUCCESS,
+    //             keyword: "success",
+    //             data: "Featured PlayList Updated Successfully"
+    //         }
+    //     } catch (error) {
+    //         return {
+    //             code: OPERATION_FAILED,
+    //             keyword: "something_went_wrong",
+    //             data: error
+    //         }
+    //     }
+    // }
 
-    async deleteFeaturePlayList(requestData){
-        try{
+    async deleteFeaturePlayList(requestData) {
+        try {
             const [result] = await database.query("UPDATE tbl_featured_playlist SET is_deleted=1 WHERE id = ?", [requestData.id])
-            if(result.affectedRows <= 0){
+            if (result.affectedRows <= 0) {
                 return {
-                    code : OPERATION_FAILED,
-                    keyword : "error_in_deleting",
-                    data : "Error in Deleting Featured PlayList"
+                    code: OPERATION_FAILED,
+                    keyword: "error_in_deleting",
+                    data: "Error in Deleting Featured PlayList"
                 }
             }
             return {
-                code : responseCode.SUCCESS,
-                keyword : "success", 
-                data : "Featured PlayList Deleted Successfully"
+                code: responseCode.SUCCESS,
+                keyword: "success",
+                data: "Featured PlayList Deleted Successfully"
             }
-        }catch(error){
-            return{
-                code : OPERATION_FAILED,
-                keyword : "something_went_wrong",
-                data : error
+        } catch (error) {
+            return {
+                code: OPERATION_FAILED,
+                keyword: "something_went_wrong",
+                data: error
             }
         }
     }
 
-    async addSongFeaturedPlaylist(requestData){
-        try{
-            console.log("Request Data : ",requestData)
+    async addSongFeaturedPlaylist(requestData) {
+        try {
+            console.log("Request Data : ", requestData)
             const addSong = {
-                song_id : requestData.song_id,
-                featured_id : requestData.playList_id
+                song_id: requestData.song_id,
+                featured_id: requestData.playList_id
             }
-            const [valid] = await database.query("SELECT * FROM tbl_featured_playlist_song WHERE featured_id = ? AND song_id = ? AND is_active = 1 AND is_deleted=0",[addSong.featured_id,addSong.song_id])
-            if(valid.length>0){
+            const [valid] = await database.query("SELECT * FROM tbl_featured_playlist_song WHERE featured_id = ? AND song_id = ? AND is_active = 1 AND is_deleted=0", [addSong.featured_id, addSong.song_id])
+            if (valid.length > 0) {
                 return {
-                    code : responseCode.REQUEST_ERROR,
-                    keyword : "alerady song Added !",
-                    data : "Song Already Added !"
+                    code: responseCode.REQUEST_ERROR,
+                    keyword: "alerady song Added !",
+                    data: "Song Already Added !"
                 }
             }
-            const [result] = await database.query("INSERT INTO tbl_featured_playlist_song SET ?",addSong)
-            if(result.affectedRows<=0){
-                return{
-                    code : OPERATION_FAILED,
-                    keyword : "error_in_inserting",
-                    data : "Error in Inserting !"
+            const [result] = await database.query("INSERT INTO tbl_featured_playlist_song SET ?", addSong)
+            if (result.affectedRows <= 0) {
+                return {
+                    code: OPERATION_FAILED,
+                    keyword: "error_in_inserting",
+                    data: "Error in Inserting !"
                 }
             }
             return {
-                code : responseCode.SUCCESS,
-                keyword : "success",
-                data : "Featured PlayList Created !"
+                code: responseCode.SUCCESS,
+                keyword: "success",
+                data: "Featured PlayList Created !"
             }
-        }catch(error){
-            return{
-                code : OPERATION_FAILED,
-                keyword : "something_went_wrong",
-                data : error
+        } catch (error) {
+            return {
+                code: OPERATION_FAILED,
+                keyword: "something_went_wrong",
+                data: error
             }
         }
     }
 
-    async getAllFeaturedplayList(requestData){
-        try{
-            let query = "SELECT f.*, c.name as category_name,(SELECT COUNT(*) FROM tbl_featured_playlist_song as fs WHERE fs.is_active = 1 AND fs.is_deleted = 0 AND fs.featured_id = f.id) as songs FROM tbl_featured_playlist as f JOIN tbl_category as c ON c.id = f.category_id WHERE f.is_active = 1 AND f.is_deleted = 0"
-            
-            if(requestData.id) {
-                query += ` AND f.id = ${requestData.id}`
+    async getAllFeaturedplayList(requestData) {
+        try {
+            console.log("Admin Model PlayList Called !");
+            let query = `
+            SELECT f.*, c.name as category_name,
+            (SELECT COUNT(*) FROM tbl_featured_playlist_song as fs 
+             WHERE fs.is_active = 1 AND fs.is_deleted = 0 
+             AND fs.featured_id = f.id) as songs 
+            FROM tbl_featured_playlist as f 
+            JOIN tbl_category as c ON c.id = f.category_id 
+            WHERE f.is_deleted = 0
+        `;
+
+            if (requestData.id) {
+                query += ` AND f.id = ${requestData.id}`;
             }
-            query += " ORDER BY f.id DESC"
-            
-            const [result] = await database.query(query)
-            if(result.length<=0){
+            query += " ORDER BY f.id DESC";
+
+            console.log("This is Query : ", query);
+            const [result] = await database.query(query);
+
+            if (result.length <= 0) {
                 return {
-                    code : responseCode.NO_DATA_FOUND,
-                    keyword : "error_in_fetching",
-                    data : "No Data Found !"
-                }
+                    code: responseCode.NO_DATA_FOUND,
+                    keyword: "error_in_fetching",
+                    data: "No Data Found !"
+                };
             }
-            if(requestData.id){
-                secondQuery = `
-                    SELECT s.*, s.id as id  FROM tbl_featured_playlist_song as fs 
-                    JOIN tbl_song as s ON s.id = fs.song_id
-                    WHERE fs.featured_id = ? AND fs.is_active = 1 AND fs.is_deleted = 0 AND fs.is_active = 1 AND s.is_deleted = 0
-                `
-                const [songs] = await database.query(secondQuery,[requestData.id])
-                console.log("Song In This PlayList : ",songs)
-                songs.length>=0 ? result[0].song = songs : result[0].song = "No Song There ! Empty Featured Play List"
-                for(let i=0;i<result.length;i++){
-                    const [artist] = await database.query(`SELECT a.* FROM tbl_artist as a JOIN tbl_artist_songs as artsng ON artsng.id = a.id WHERE a.is_active = 1 AND a.is_deleted = 0 AND artsng.is_active AND artsng.is_deleted = 0 AND artsng.song_id = ?`,result[i].id)
-                    if(artist.length>0){
-                        result[i].artistDetails = artist.length == 1 ? artist[0] : artist
+
+            if (requestData.id) {
+                const secondQuery = `
+                SELECT s.*, s.id as id  
+                FROM tbl_featured_playlist_song as fs 
+                JOIN tbl_song as s ON s.id = fs.song_id
+                WHERE fs.featured_id = ? 
+                  AND fs.is_active = 1 
+                  AND fs.is_deleted = 0 
+                  AND s.is_deleted = 0
+            `;
+
+                const [songs] = await database.query(secondQuery, [requestData.id]);
+                console.log("Song In This PlayList : ", songs);
+
+                result[0].song = songs.length > 0
+                    ? songs
+                    : "No Song There ! Empty Featured Play List";
+
+                for (let i = 0; i < songs.length; i++) {
+                    const [artist] = await database.query(
+                        `SELECT a.* 
+                     FROM tbl_artist as a 
+                     JOIN tbl_artist_songs as artsng ON artsng.artist_id = a.id 
+                     WHERE a.is_active = 1 AND a.is_deleted = 0 
+                       AND artsng.is_active = 1 AND artsng.is_deleted = 0 
+                       AND artsng.song_id = ?`,
+                        [songs[i].id]
+                    );
+                    if (artist.length > 0) {
+                        songs[i].artistDetails = artist.length === 1 ? artist[0] : artist;
                     }
                 }
             }
+
             return {
-                code : responseCode.SUCCESS,
-                keyword : "success",
-                data : result.length == 1 ? result[0] : result
-            }
-        }catch(error){
-            return{
-                code : OPERATION_FAILED,
-                keyword : "something_went_wrong",
-                data : error
-            }
+                code: responseCode.SUCCESS,
+                keyword: "success",
+                data: result.length === 1 ? result[0] : result
+            };
+        } catch (error) {
+            console.log("Error :", error)
+            return {
+                code: responseCode.OPERATION_FAILED,
+                keyword: "something_went_wrong",
+                data: error
+            };
         }
     }
+
 
     async deleteSongFromFeaturedPlaylist(requestData) {
         try {
@@ -1047,6 +1079,322 @@ class adminModel{
             }
         }
     }
+    async updateFeaturedPlayList(requestData) {
+        try {
+            const id = requestData.id;
+            let data={}
+            if (requestData.state) {
+                data = {
+                    is_active: requestData.is_active ? 0 : 1
+                }
+            } else {
+                data = {
+                    name: requestData.name,
+                    description: requestData.description,
+                    image: requestData.image,
+                    category_id: requestData.category_id,
+                    updated_at: new Date()
+                }
+            }
+            const [result] = await database.query(`UPDATE tbl_featured_playlist SET ? WHERE id = ?`, [data, id])
+            if (result.affectedRows <= 0) {
+                return {
+                    code: OPERATION_FAILED,
+                    keyword: "no row affecetd",
+                    data: "Error in Updating"
+                }
+            }
+            return {
+                code: responseCode.SUCCESS,
+                keyword: "success",
+                data: "Play List Updated !"
+            }
+        } catch (error) {
+            return {
+                code: responseCode.OPERATION_FAILED,
+                keyword: "something_went_wrong",
+                data: error
+            }
+        }
+    }
+
+    //PodCast
+
+    async addPodCast(requestData){
+        try{
+            let podCastData = {
+                title : requestData.title,
+                taken_by:requestData.taken_by,
+                description : requestData.description,
+                duration:requestData.duration,
+                video : requestData.video,
+                thumbnail : requestData.thumbnail
+            }
+            const [result] = await database.query("INSERT INTO tbl_podcast SET ?",podCastData)
+            if(result.affectedRows<=0){
+                return{
+                    code : OPERATION_FAILED,
+                    keyword : "error_in_inserting",
+                    data:"PodCast Not Inserted !"
+                }
+            }
+            return {
+                code : responseCode.SUCCESS,
+                keyword : "success",
+                data : "PodCast Saved Successfully !"
+            }
+        }catch(error){
+            return{
+                code : OPERATION_FAILED,
+                keyword : "something_went_wrong",
+                data : error
+            }
+        }
+    }
+
+    async getAllPodCast(requestData){
+        try{
+            let query = "SELECT * FROM tbl_podcast WHERE is_deleted = 0";
+            if(requestData.id){
+                query += ` AND id = ${requestData.id}`
+            }
+
+            const [result] = await database.query(query)
+            if(result.length<=0){
+                return {
+                    code : responseCode.NO_DATA_FOUND,
+                    keyword : "no data found",
+                    data: "No Row SELECETED !"
+                }
+            }
+            return {
+                code : responseCode.SUCCESS,
+                keyword : "success",
+                data : result.length==1?result[0]:result        
+            }
+        }catch(error){
+            return{
+                code : OPERATION_FAILED,
+                keyword : "sonething_went_wrong",
+                data : error
+            }
+        }
+    }
+
+    async updatePodCast(requestData){
+        try{
+            console.log("Data ===========",requestData)
+            const updateData = {
+                title : requestData.title,
+                taken_by:requestData.taken_by,
+                description : requestData.description,
+                duration:requestData.duration,
+                video : requestData.video,
+                thumbnail : requestData.thumbnail,
+                updated_at : new Date()
+            }
+            if(requestData.state){
+                const stateChange = {
+                    is_active : requestData.is_active?0:1
+                }
+                const [result] = await database.query(`UPDATE tbl_podcast SET ? WHERE id=?`,[stateChange, requestData.id])
+                if(result.affectedRows<=0){
+                    return{
+                        code : OPERATION_FAILED,
+                        keyword : "error_in_updateing",
+                        data : "Error in Updating Data !"
+                    }
+                }
+                return {
+                    code : responseCode.SUCCESS,
+                    keyword : "updated podCast!",
+                    data : requestData.is_active==1?"User Blocked Successfully":"User UnBlock Successfully"
+                }   
+            }else{
+                const [result] = await database.query(`UPDATE tbl_podcast SET ? WHERE id=?`,[updateData, requestData.id])
+                if(result.affectedRows<=0){
+                    return{
+                        code : OPERATION_FAILED,
+                        keyword : "error_in_updateing",
+                        data : "Error in Updating Data !"
+                    }
+                }
+                return {
+                    code : responseCode.SUCCESS,
+                    keyword : "updated podCast!",
+                    data : "PodCast Upadated !"
+                }
+            }
+        }catch(error){
+            return {
+                code : OPERATION_FAILED,
+                keyword: "something_went_wrong",
+                data: error
+            }
+        }
+    }
+    async deletePodCast(requestData){
+        try{
+            const [result] = await database.query(`UPDATE tbl_podcast SET is_deleted = 1 WHERE id=?`,[requestData.id])
+            if(result.affectedRows<=0){
+                return{
+                    code : OPERATION_FAILED,
+                    keyword : "error_in_deleted",
+                    data : "Error in Deleted Data !"
+                }
+            }
+            return {
+                code : responseCode.SUCCESS,
+                keyword : "success",
+                data : "PodCast Deleted !"
+            }
+        }catch(error){
+            return {
+                code : OPERATION_FAILED,
+                keyword: "something_went_wrong",
+                data: error
+            }
+        }
+    }
+
+    //Song Stories
+
+    async addStory(requestData){
+        try{
+
+            console.log("Entering in that Func !")
+            const storyData = {
+                title : requestData.title,
+                star_name : requestData.star_name,
+                description : requestData.description,
+                admin_id : requestData.admin_id || 1
+            }
+            const [result] = await database.query("INSERT INTO tbl_song_story SET ?",storyData)
+            if(result.affectedRows<=0){
+                return{
+                    code : OPERATION_FAILED,
+                    keyword : "error in inserting",
+                    data : "Failed to Inserting Story !"
+                }
+            }
+            return{
+                code : responseCode.SUCCESS,
+                keyword : "success",
+                data : "Story Inseted Successfully !"
+            }
+        }catch(error){
+            return {
+                code : OPERATION_FAILED,
+                keyword: "something_went_wrong",
+                data: error
+            }
+        }
+    }
+
+    async getAllStory(requestData){
+        try{
+            let query = "SELECT * FROM tbl_song_story WHERE is_deleted=0"
+            if(requestData.id){
+                query += ` AND id=${requestData.id}`
+            }
+            query += " ORDER BY id DESC"
+
+            const [result] = await database.query(query);
+            if(result.length<=0){
+                return {
+                   code : responseCode.NO_DATA_FOUND,
+                   keyword: "not found",
+                   data: "No Story Found !"
+               }
+            }
+            return {
+                code : responseCode.SUCCESS,
+                keyword : "success",
+                data:result.length == 1?result[0]:result
+            }
+        }catch(error){
+             return {
+                code : OPERATION_FAILED,
+                keyword: "something_went_wrong",
+                data: error
+            }
+        }
+    }
+
+    async updateStory(requestData){
+        try{
+            let query = "UPDATE tbl_song_story SET ? WHERE id = ?"
+            if(requestData?.state){
+                const stateChange = {
+                    is_active : requestData.is_active?0:1
+                }
+                const [result] = await database.query(query,[stateChange, requestData.id])
+                if(result.affectedRows<=0){
+                    return {
+                        code : OPERATION_FAILED,
+                        keyword : "Error in Updating Story",
+                        data : "Failed to Update Story !"
+                    }
+                }
+                return{
+                    code : responseCode.SUCCESS,
+                    keyword : "success",
+                    data : requestData.is_active?"Story Blocked Successfully !":"Story UnBlocked Successfully !"
+                }
+            }else{
+                const updateData = {
+                    title : requestData.title,
+                    description : requestData.description,
+                    star_name : requestData.star_name,
+                    admin_id : requestData.admin_id || 1
+                }
+                const [result] = await database.query(query,[updateData, requestData.id])
+                if(result.affectedRows<=0){
+                    return {
+                        code : OPERATION_FAILED,
+                        keyword : "Error in Updating Story",
+                        data : "Failed to Update Story !"
+                    }
+                }
+                return{
+                    code : responseCode.SUCCESS,
+                    keyword : "success",
+                    data : "Story Updated Successfully !"
+                }
+            }
+        }catch(error){
+            return {
+                code : OPERATION_FAILED,
+                keyword: "something_went_wrong",
+                data: error
+            }
+        }
+    }
+
+    async deleteStory(requestData){
+        try{
+            const [result] = await database.query("UPDATE tbl_song_story SET is_deleted = 1 WHERE id = ?",[requestData.id])
+            if(result.affectedRows<=0){
+                return {
+                    code : OPERATION_FAILED,
+                    keyword : "error_in_deleting",
+                    data : "Failed to Delete Story !"
+                }
+            }
+            return {
+                code : responseCode.SUCCESS,
+                keyword : "success",
+                data : "Story Deleted Successfully !"
+            }
+        }catch(error){
+            return{
+                code : OPERATION_FAILED,
+                keyword: "something_went_wrong",
+                data: error
+            }
+        }
+    }
+
 }
 
 module.exports = new adminModel()

@@ -1,7 +1,7 @@
 "use client"
 import SideNavBar from "./sideNavBar";
 import NavBar from "./navBar";
-import '@/app/styles/admin/style.css'; 
+import '@/app/styles/admin/style.css';
 import { LineWave } from "react-loader-spinner";
 import { useEffect, useState } from "react";
 
@@ -20,14 +20,21 @@ const Layout = ({ children }) => {
     return (
         <>
             {loader ? (
-                <div className="loader">
-                    <LineWave
-                        visible={true}
-                        height="200"
-                        width="200"
-                        color="#4fa94d"
-                        ariaLabel="line-wave-loading"
-                    />
+                <div className="container d-flex justify-content-center align-items-center" style={{height:"100vh"}}>
+                    <div className="loader">
+                        <LineWave
+                            visible={true}
+                            height="200"
+                            width="200"
+                            color="#4fa94d"
+                            ariaLabel="line-wave-loading"
+                            wrapperStyle={{}}
+                            wrapperClass=""
+                            firstLineColor=""
+                            middleLineColor=""
+                            lastLineColor=""
+                        />
+                    </div>
                 </div>
             ) : (
                 <div className="container-fluid min-vh-100">

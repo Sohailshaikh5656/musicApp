@@ -14,9 +14,9 @@ class userModel {
     async signup(requestData) {
         try {
             const userData = {
-                name : requestData.name,
+                name: requestData.name,
                 email: requestData.email,
-                login_type : requestData.loginType
+                login_type: requestData.loginType
             }
             const checkEmail = await common.checkEmail(requestData.email)
             console.log("this is ", checkEmail)
@@ -27,13 +27,13 @@ class userModel {
                     data: `Error in Inserting User | Email Already Exists Try with Another Email !`
                 }
             }
-            
+
             let a = requestData.email
             let arr = a.split("@")
             userData.username = arr[0];
-            if(requestData.loginType == "S"){
+            if (requestData.loginType == "S") {
                 userData.password = await common.getHashedPassword(requestData.password)
-            }else{
+            } else {
                 userData.social_id = requestData.social_id
             }
             const [result] = await database.query("INSERT INTO tbl_user SET ?", userData, (error) => {
@@ -53,7 +53,7 @@ class userModel {
                 { user_id: result.insertId }, process.env.SECRET_KEY, { "expiresIn": "1d" }
             )
             console.log("this is User ID", result.insertId)
-            
+
             return {
                 code: responseCode.SUCCESS,
                 keyword: "success",
@@ -95,7 +95,7 @@ class userModel {
 
     async signin(requestData) {
         try {
-            console.log("Data : ",requestData)
+            console.log("Data : ", requestData)
             let email = requestData.email;
             let result;
             const checkEmail = await common.checkEmail(requestData.email)
@@ -107,7 +107,7 @@ class userModel {
                     data: `Error in Verfing User | Email Not Exists Try to Register !`
                 }
             }
-            if(requestData.loginType == "S"){
+            if (requestData.loginType == "S") {
                 let [res] = await database.query("SELECT * FROM tbl_user WHERE is_active=1 AND is_deleted=0 AND email = ?", [email])
                 const compare = await common.comparePasswords(requestData.password, res[0].password)
                 if (!compare) {
@@ -119,18 +119,18 @@ class userModel {
                 }
                 result = res[0]
 
-            }else{
-                let [res] = await database.query("SELECT * from tbl_user WHERE is_active=1 AND is_deleted=0 AND email = ? AND social_id = ?",[email,requestData.social_id])
-                if(res.length<=0){
+            } else {
+                let [res] = await database.query("SELECT * from tbl_user WHERE is_active=1 AND is_deleted=0 AND email = ? AND social_id = ?", [email, requestData.social_id])
+                if (res.length <= 0) {
                     return {
-                        code : OPERATION_FAILED,
-                        keyword : "social_id not mateched",
-                        data : "Social ID not Matched Error !"
+                        code: OPERATION_FAILED,
+                        keyword: "social_id not mateched",
+                        data: "Social ID not Matched Error !"
                     }
                 }
                 result = res[0]
             }
-            
+
             let JWTToken = jwt.sign(
                 { user_id: result.id }, process.env.SECRET_KEY, { "expiresIn": "1d" }
             )
@@ -152,29 +152,29 @@ class userModel {
             }
         }
     }
-    async forgetPassword(requestData){
-        try{
+    async forgetPassword(requestData) {
+        try {
             console.log("Thsi is Credintaial 1 : ", requestData.emailOrUsername)
             let email = requestData.emailOrUsername;
             console.log("Thsi is Credintaial : ", email)
-            const [result] = await database.query("SELECT * FROM tbl_user WHERE (email = ? OR username = ?) AND is_active = 1 AND is_deleted=0",[email,email])
-            if(result.length<=0){
+            const [result] = await database.query("SELECT * FROM tbl_user WHERE (email = ? OR username = ?) AND is_active = 1 AND is_deleted=0", [email, email])
+            if (result.length <= 0) {
                 return {
-                    code : responseCode.NO_DATA_FOUND,
-                    keyword : "no data found",
-                    data : "No Register Email Found !"
+                    code: responseCode.NO_DATA_FOUND,
+                    keyword: "no data found",
+                    data: "No Register Email Found !"
                 }
-            }else if(result[0].login_type.toLowerCase() == "g"){
+            } else if (result[0].login_type.toLowerCase() == "g") {
                 return {
-                    code : responseCode.NOT_REGISTER,
-                    keyword : "no data found",
-                    data : "This is Google Acoount ! Try Google Login !"
+                    code: responseCode.NOT_REGISTER,
+                    keyword: "no data found",
+                    data: "This is Google Acoount ! Try Google Login !"
                 }
             }
             const token = await common.genereateToken()
             const user_id = result[0].id
-            const [tokenGenerated] = await database.query("INSERT INTO tbl_forget_password(user_id,token,expire_at) VALUES(?,?,DATE_ADD(CURRENT_TIMESTAMP,INTERVAL 5 MINUTE))",[user_id, token])
-            if(tokenGenerated.affectedRows <= 0){
+            const [tokenGenerated] = await database.query("INSERT INTO tbl_forget_password(user_id,token,expire_at) VALUES(?,?,DATE_ADD(CURRENT_TIMESTAMP,INTERVAL 5 MINUTE))", [user_id, token])
+            if (tokenGenerated.affectedRows <= 0) {
                 return {
                     code: OPERATION_FAILED,
                     keyword: "error_in_generating_token",
@@ -182,23 +182,23 @@ class userModel {
                 }
             }
             result[0].token = token
-            common.sendMail("Change Password !",result[0].email,template.forgetPassword(result[0]))
-        return {
-            code: responseCode.SUCCESS,
-            keyword: "success",
-            data: "Password reset email sent successfully"
-        }
-        }catch(error){
+            common.sendMail("Change Password !", result[0].email, template.forgetPassword(result[0]))
             return {
-                code : OPERATION_FAILED,
-                keyword : "somethibg_went_wrong",
-                data : error
+                code: responseCode.SUCCESS,
+                keyword: "success",
+                data: "Password reset email sent successfully"
+            }
+        } catch (error) {
+            return {
+                code: OPERATION_FAILED,
+                keyword: "somethibg_went_wrong",
+                data: error
             }
         }
     }
 
-    async searchSong(requestData){
-        try{
+    async searchSong(requestData) {
+        try {
             const keyword = `%${requestData.keyword.toLowerCase()}%`
             const [result] = await database.query(`SELECT s.id as id,s.*, c.name as genere,
                 (SELECT GROUP_CONCAT(art.name) FROM tbl_artist as art JOIN tbl_artist_songs as artsng ON art.id = artsng.artist_id WHERE s.id = artsng.song_id) as artist_name 
@@ -206,45 +206,45 @@ class userModel {
                 JOIN tbl_artist_songs as ar ON ar.song_id = s.id 
                 JOIN tbl_artist as a ON a.id = ar.artist_id 
                 JOIN tbl_category as c ON c.id = s.category_id
-                WHERE LOWER(s.title) LIKE ? OR LOWER(a.name) LIKE ? OR LOWER(s.album_name) LIKE ? OR LOWER(a.name) LIKE ?`,[keyword,keyword, keyword, keyword])
-                if(result.length<=0){
-                    return {
-                        code : responseCode.NO_DATA_FOUND,
-                        keyword : "no_data_found",
-                        data : "No Song SELECTED"
+                WHERE LOWER(s.title) LIKE ? OR LOWER(a.name) LIKE ? OR LOWER(s.album_name) LIKE ? OR LOWER(a.name) LIKE ?`, [keyword, keyword, keyword, keyword])
+            if (result.length <= 0) {
+                return {
+                    code: responseCode.NO_DATA_FOUND,
+                    keyword: "no_data_found",
+                    data: "No Song SELECTED"
+                }
+            }
+            const uniqueData = [];
+            for (let i = 0; i < result.length; i++) {
+                let flag = false;
+                for (let j = 0; j < uniqueData.length; j++) {
+                    if (result[i].id == uniqueData[j].id) {
+                        flag = true;
+                        break
                     }
                 }
-                const uniqueData = [];
-                for(let i=0;i<result.length;i++){
-                    let flag = false;
-                    for(let j=0;j<uniqueData.length;j++){
-                        if(result[i].id == uniqueData[j].id){
-                            flag = true;
-                            break
-                        }
-                    }
-                    if(!flag){
-                        uniqueData.push(result[i])
-                    }
-                    
+                if (!flag) {
+                    uniqueData.push(result[i])
                 }
-                return{
-                    code : responseCode.SUCCESS,
-                    keyword : "success",
-                    data : uniqueData
-                }
-        }catch(error){
-            return{
-                code : OPERATION_FAILED,
-                keyword : "something_went_wrong",
-                data : error
+
+            }
+            return {
+                code: responseCode.SUCCESS,
+                keyword: "success",
+                data: uniqueData
+            }
+        } catch (error) {
+            return {
+                code: OPERATION_FAILED,
+                keyword: "something_went_wrong",
+                data: error
             }
         }
     }
-    async song(requestData){
+    async song(requestData) {
         try {
             // First query to get the main song details
-            console.log("USER ID : ",requestData.user_id)
+            console.log("USER ID : ", requestData.user_id)
             const [result] = await database.query(`
                 SELECT DISTINCT s.*, a.name as artist_name, 
                 (SELECT GROUP_CONCAT(art.name SEPARATOR ', ') 
@@ -261,7 +261,7 @@ class userModel {
                 JOIN tbl_artist a ON a.id = ar.artist_id
                 JOIN tbl_category c ON c.id = s.category_id
                 WHERE s.id = ? AND s.is_deleted = 0 AND s.is_active = 1
-            `, [requestData.user_id, requestData.id,requestData.id]);
+            `, [requestData.user_id, requestData.id, requestData.id]);
 
             if (!result || result.length === 0) {
                 return {
@@ -272,7 +272,7 @@ class userModel {
             }
             console.log()
             const song = result[0];
-            console.log("This is Song Data : ",song)
+            console.log("This is Song Data : ", song)
             // Second query to get related songs
             const [relatedSongs] = await database.query(`
                 SELECT DISTINCT s.id, s.*, 
@@ -291,9 +291,9 @@ class userModel {
                 JOIN tbl_category c ON c.id = s.category_id
                 WHERE s.is_deleted = 0 AND s.is_active = 1 
                 AND (a.name = ? OR c.name = ?)
-            `, [requestData.user_id, requestData.id,song.artist_name, song.genre]);
-            
-            console.log("This is Next Song Data : ",relatedSongs)
+            `, [requestData.user_id, requestData.id, song.artist_name, song.genre]);
+
+            console.log("This is Next Song Data : ", relatedSongs)
             // Combine results with main song first
             let data = [song, ...relatedSongs];
             let uniqueSongs = [];
@@ -326,53 +326,53 @@ class userModel {
         }
     }
 
-    async checkMail(requestData){
+    async checkMail(requestData) {
         const checkEmail = await common.checkEmail(requestData.email)
-            console.log("this is ", checkEmail)
-            if (checkEmail) {
-                return {
-                    code: responseCode.SUCCESS,
-                    keyword: "Email Already Exits",
-                    data: `Email Already Exists Try with Another Email !!!`
-                }
-            }else{
-                return {
-                    code: responseCode.OPERATION_FAILED,
-                    keyword: "Email Not Exits",
-                    data: `Email Not Exists !`
-                }
+        console.log("this is ", checkEmail)
+        if (checkEmail) {
+            return {
+                code: responseCode.SUCCESS,
+                keyword: "Email Already Exits",
+                data: `Email Already Exists Try with Another Email !!!`
             }
+        } else {
+            return {
+                code: responseCode.OPERATION_FAILED,
+                keyword: "Email Not Exits",
+                data: `Email Not Exists !`
+            }
+        }
 
     }
 
-    async artist(requestData){
-        try{
-            const [isArtist] = await database.query('SELECT * FROM tbl_artist WHERE is_active = 1 AND is_deleted=0 AND name = ?',[requestData.name]);
-            if(isArtist.length > 0){
+    async artist(requestData) {
+        try {
+            const [isArtist] = await database.query('SELECT * FROM tbl_artist WHERE is_active = 1 AND is_deleted=0 AND name = ?', [requestData.name]);
+            if (isArtist.length > 0) {
                 return {
-                    code : OPERATION_FAILED,
-                    keyword : "Already Exists",
-                    data : "Artist Already Exists"
+                    code: OPERATION_FAILED,
+                    keyword: "Already Exists",
+                    data: "Artist Already Exists"
                 }
             }
-            const [result] = await database.query(`INSERT INTO tbl_artist SET ?`,requestData)
-            if(result.affectedRows<=0){
+            const [result] = await database.query(`INSERT INTO tbl_artist SET ?`, requestData)
+            if (result.affectedRows <= 0) {
                 return {
-                    code : responseCode.OPERATION_FAILED,
-                    keyword : "error_in_inserting",
-                    data : "Error in Inserting | 0 Row Affected !"
+                    code: responseCode.OPERATION_FAILED,
+                    keyword: "error_in_inserting",
+                    data: "Error in Inserting | 0 Row Affected !"
                 }
             }
             return {
-                code : responseCode.SUCCESS,
-                keyword : "success",
-                data : "New Artist Added !"
+                code: responseCode.SUCCESS,
+                keyword: "success",
+                data: "New Artist Added !"
             }
-        }catch(error){
+        } catch (error) {
             return {
-                code : OPERATION_FAILED,
-                keyword : "something went wrong",
-                data : error.data || error
+                code: OPERATION_FAILED,
+                keyword: "something went wrong",
+                data: error.data || error
             }
         }
     }
@@ -426,29 +426,29 @@ class userModel {
             }
         }
     }
-    async playCount(requestData){
-        try{
-            console.log("ID : ",requestData)
+    async playCount(requestData) {
+        try {
+            console.log("ID : ", requestData)
             const [result] = await database.query(`
                     UPDATE tbl_song SET play_count = play_count+1 WHERE id = ?
-                `,[requestData.id])
-            if(result.affectedRows<=0){
-                return{
-                    code : OPERATION_FAILED,
-                    keyword : "error_in_updating_countplay",
-                    data : "Error in Updating Count Play !"
+                `, [requestData.id])
+            if (result.affectedRows <= 0) {
+                return {
+                    code: OPERATION_FAILED,
+                    keyword: "error_in_updating_countplay",
+                    data: "Error in Updating Count Play !"
                 }
             }
             return {
-                code : responseCode.SUCCESS,
-                keyword : "success",
-                data : "Count Updated !"
+                code: responseCode.SUCCESS,
+                keyword: "success",
+                data: "Count Updated !"
             }
-        }catch(error){
-            return{
-                code : OPERATION_FAILED,
-                keyword : "something_went_wrong",
-                data : error
+        } catch (error) {
+            return {
+                code: OPERATION_FAILED,
+                keyword: "something_went_wrong",
+                data: error
             }
         }
     }
@@ -526,7 +526,7 @@ class userModel {
 
     async fetchComments(requestData) {
         try {
-            console.log("ID : ",requestData)
+            console.log("ID : ", requestData)
             const [result] = await database.query(
                 `SELECT c.*,
                 DATE_FORMAT(c.created_at, '%Y-%m-%d %H:%i:%s') AS created_at,
@@ -564,32 +564,32 @@ class userModel {
         }
     }
 
-    async newPlayList(requestData){
-        try{
+    async newPlayList(requestData) {
+        try {
             const playListData = {
-                title : requestData.name,
-                image : requestData.image,
-                user_id : requestData.user_id
+                title: requestData.name,
+                image: requestData.image,
+                user_id: requestData.user_id
             }
 
-            const [result] = await database.query(`INSERT INTO tbl_playlist SET ?`,playListData)
-            if(result.affectedRows<=0){
+            const [result] = await database.query(`INSERT INTO tbl_playlist SET ?`, playListData)
+            if (result.affectedRows <= 0) {
                 return {
-                    code : OPERATION_FAILED,
-                    keyword : "error_in_inserting",
-                    data : "Error in Creating a New PlayList"
+                    code: OPERATION_FAILED,
+                    keyword: "error_in_inserting",
+                    data: "Error in Creating a New PlayList"
                 }
             }
             return {
-                code : responseCode.SUCCESS,
-                keyword : "success",
-                data : "New PlayList Created !"
+                code: responseCode.SUCCESS,
+                keyword: "success",
+                data: "New PlayList Created !"
             }
-        }catch(error){
+        } catch (error) {
             return {
-                code : OPERATION_FAILED,
-                keyword : "something_went_wrong",
-                data : error
+                code: OPERATION_FAILED,
+                keyword: "something_went_wrong",
+                data: error
             }
         }
     }
@@ -624,32 +624,35 @@ class userModel {
         }
     }
 
-    async getAllPlayList(requestData){
-        try{
-            const [result] = await database.query("SELECT p.*, DATE_FORMAT(p.created_at, '%D %M, %Y') as created_at, (SELECT COUNT(*) FROM tbl_playlist_song as ps WHERE ps.playlist_id = p.id) as songs FROM tbl_playlist as p WHERE p.user_id=?",[requestData.user_id])
-            if(result.length<=0){
+    async getAllPlayList(requestData) {
+        try {
+            let query = "SELECT p.*, DATE_FORMAT(p.created_at, '%D %M, %Y') as created_at, (SELECT COUNT(*) FROM tbl_playlist_song as ps WHERE ps.playlist_id = p.id) as songs FROM tbl_playlist as p WHERE p.user_id=?"
+            if (requestData.id) query += ` AND p.id = ${requestData.id}`
+
+            const [result] = await database.query(query, [requestData.user_id])
+            if (result.length <= 0) {
                 return {
-                    code : responseCode.NO_DATA_FOUND,
-                    keyword : "not_found",
-                    data : "No Data Found || No Play List Found !"
+                    code: responseCode.NO_DATA_FOUND,
+                    keyword: "not_found",
+                    data: "No Data Found || No Play List Found !"
                 }
             }
             return {
-                code : responseCode.SUCCESS,
-                keyword : "success",
-                data: result
+                code: responseCode.SUCCESS,
+                keyword: "success",
+                data: result.length == 1 ? result[0] : result
             }
-        }catch(error){
-            return{
-                code : OPERATION_FAILED,
-                keyword : "something_went_wrong",
-                data : error
+        } catch (error) {
+            return {
+                code: OPERATION_FAILED,
+                keyword: "something_went_wrong",
+                data: error
             }
         }
     }
 
-    async getPlayListSongs(requestData){
-        try{
+    async getPlayListSongs(requestData) {
+        try {
             let [result] = await database.query(
                 `SELECT p.* FROM tbl_playlist as p WHERE p.id = ? AND p.is_active=1 AND p.is_deleted = 0`,
                 [requestData.id]
@@ -663,131 +666,213 @@ class userModel {
                 JOIN tbl_song as s ON s.id = ps.song_id
                 JOIN tbl_artist_songs as arsng ON arsng.song_id = s.id
                 JOIN tbl_artist as a ON a.id = arsng.artist_id
-                WHERE ps.playlist_id = ? AND ps.is_active=1 AND ps.is_deleted=0`,[requestData.id]
+                WHERE ps.playlist_id = ? AND ps.is_active=1 AND ps.is_deleted=0`, [requestData.id]
             )
-            if(result.length<=0){
+            if (result.length <= 0) {
                 return {
-                    code : responseCode.NO_DATA_FOUND,
-                    keyword : "not_found",
-                    data : "No PlayList Found with Thsis ID"
+                    code: responseCode.NO_DATA_FOUND,
+                    keyword: "not_found",
+                    data: "No PlayList Found with Thsis ID"
                 }
             }
             result = result[0]
-            if(songs.length<=0){
+            if (songs.length <= 0) {
                 result.songs = "No Song Found ! An Empty Play List"
-                return{
-                    code : responseCode.NO_DATA_FOUND,
-                    keyword : "not_found",
+                return {
+                    code: responseCode.NO_DATA_FOUND,
+                    keyword: "not_found",
                     data: result,
                 }
             }
             result.songs = songs
             return {
-                code : responseCode.SUCCESS,
-                keyword : "success",
-                data : result,
-                songs : songs
+                code: responseCode.SUCCESS,
+                keyword: "success",
+                data: result,
+                songs: songs
             }
-        }catch(error){
-            return{
-                code : OPERATION_FAILED,
-                keyword : "something_went_wrong",
-                data : error
-            }
-        }
-    }
-
-    async addPlayListSong(requestData){
-        try{
-            console.log("############################# This Function Called !")
-            const playListData = {
-                song_id : requestData.song_id,
-                playlist_id : requestData.playlist_id
-            }
-            const [checkSong] = await database.query("SELECT * FROM tbl_playlist_song WHERE playlist_id = ? AND song_id = ? AND is_active=1 AND is_deleted=0",[requestData.playlist_id, requestData.song_id])
-            if(checkSong.length>0){
-                return{
-                    code : responseCode.REQUEST_ERROR,
-                    keyword : "song already added !",
-                    data : "This song is already in the playlist"
-                }
-            }
-            const [result] = await database.query(
-                `INSERT INTO tbl_playlist_song SET ?`,playListData
-            )
-            if(result.affectedRows<=0){
-                return{
-                    code : OPERATION_FAILED,
-                    keyword : "error_in_inserting",
-                    data : "Error in Insrting || Not Added into Playlist"
-                }
-            }
+        } catch (error) {
             return {
-                code : responseCode.SUCCESS,
-                keyword : "success",
-                data : "Successfully Song Added to Play List"
-            }
-        }catch(error){
-            return{
-                code : OPERATION_FAILED,
-                keyword : "something_went_wrong",
-                data : error
-            }
-        }
-    }
-
-    async getFeaturedPlayList(requestData){
-        try{
-            let query = "SELECT f.*, (SELECT COUNT(*) FROM tbl_featured_playlist_song as fs WHERE fs.is_active = 1 AND fs.is_deleted = 0 AND fs.featured_id = f.id) as songs FROM tbl_featured_playlist as f WHERE f.is_active = 1 AND f.is_deleted=0"
-            if(requestData.id) query+= `AND f.id = ${requestData.id}`
-            query += `ORDER BY f.id DESC`
-            const [result] = await database.query(query)
-            if(result.length<=0){
-                return{
-                    code : responseCode.NO_DATA_FOUND,
-                    keyword : "no_data_found",
-                    data : "No Featured Playlist Found !"
-                }
-            }
-            return {
-                code : responseCode.SUCCESS,
-                keyword : "success",
-                data : result.length == 1?result[0]:result
-            }
-        }catch(error){
-            return{
-                code : OPERATION_FAILED,
-                keyword : "soemthing_went_wrong",
+                code: OPERATION_FAILED,
+                keyword: "something_went_wrong",
                 data: error
             }
         }
     }
 
-    async homePage(requestData){
-        try{
+    async addPlayListSong(requestData) {
+        try {
+            console.log("############################# This Function Called !")
+            const playListData = {
+                song_id: requestData.song_id,
+                playlist_id: requestData.playlist_id
+            }
+            const [checkSong] = await database.query("SELECT * FROM tbl_playlist_song WHERE playlist_id = ? AND song_id = ? AND is_active=1 AND is_deleted=0", [requestData.playlist_id, requestData.song_id])
+            if (checkSong.length > 0) {
+                return {
+                    code: responseCode.REQUEST_ERROR,
+                    keyword: "song already added !",
+                    data: "This song is already in the playlist"
+                }
+            }
+            const [result] = await database.query(
+                `INSERT INTO tbl_playlist_song SET ?`, playListData
+            )
+            if (result.affectedRows <= 0) {
+                return {
+                    code: OPERATION_FAILED,
+                    keyword: "error_in_inserting",
+                    data: "Error in Insrting || Not Added into Playlist"
+                }
+            }
+            return {
+                code: responseCode.SUCCESS,
+                keyword: "success",
+                data: "Successfully Song Added to Play List"
+            }
+        } catch (error) {
+            return {
+                code: OPERATION_FAILED,
+                keyword: "something_went_wrong",
+                data: error
+            }
+        }
+    }
+
+    async updatePlaylist(requestData) {
+        try {
+            const updateData = {
+                image: requestData.image,
+                title: requestData.title
+            }
+            const id = requestData.id
+
+            const [result] = await database.query("UPDATE tbl_playlist SET ? WHERE id = ?", [updateData, id])
+            if (result.affectedRows <= 0) {
+                return {
+                    code: requestData.OPERATION_FAILED,
+                    keyword: "playlist not updated !",
+                    data: "Error in Updating !"
+                }
+            }
+            return {
+                code: responseCode.SUCCESS,
+                keyword: "success",
+                data: "Playlist Updated Successfully"
+            }
+        } catch (error) {
+            return {
+                code: responseCode.OPERATION_FAILED,
+                keyword: "something_went_wrong",
+                data: error
+            }
+        }
+    }
+
+    async deletePlayListSongs(requestData) {
+        try {
+            console.log("This si Deleted Data  : ", requestData)
+            const query = "UPDATE tbl_playlist_song SET is_deleted = 1 WHERE playlist_id = ? AND song_id = ?";
+            const [result] = await database.query(query, [requestData.playlist_id, requestData.song_id]);
+
+            if (result.affectedRows <= 0) {
+                return {
+                    code: responseCode.OPERATION_FAILED,
+                    keyword: "delete_failed",
+                    data: "Failed to delete song from playlist"
+                }
+            }
+            return {
+                code: responseCode.SUCCESS,
+                keyword: "success",
+                data: "Song successfully removed from playlist"
+            }
+        } catch (error) {
+            return {
+                code: responseCode.OPERATION_FAILED,
+                keyword: "something_went_wrong",
+                data: error
+            }
+        }
+    }
+
+    async getFeaturedPlayList(requestData) {
+        try {
+            let query = `
+                SELECT f.*, 
+                c.name as category_name, 
+                (SELECT COUNT(*) 
+                    FROM tbl_featured_playlist_song as fs 
+                    WHERE fs.is_active = 1 
+                    AND fs.is_deleted = 0 
+                    AND fs.featured_id = f.id) as songs
+            FROM tbl_featured_playlist as f 
+            JOIN tbl_category as c 
+                ON c.id = f.category_id 
+            WHERE f.is_active = 1 
+            AND f.is_deleted = 0
+            `
+            if (requestData.id) query += `AND f.id = ${requestData.id}`
+            query += `ORDER BY f.id DESC`
+            const [result] = await database.query(query)
+            if (result.length <= 0) {
+                return {
+                    code: responseCode.NO_DATA_FOUND,
+                    keyword: "no_data_found",
+                    data: "No Featured Playlist Found !"
+                }
+            }
+            return {
+                code: responseCode.SUCCESS,
+                keyword: "success",
+                data: result.length == 1 ? result[0] : result
+            }
+        } catch (error) {
+            return {
+                code: OPERATION_FAILED,
+                keyword: "soemthing_went_wrong",
+                data: error
+            }
+        }
+    }
+
+    async homePage(requestData) {
+        try {
             let result = {}
             // const featuredPlaylist = await this.getFeaturedPlayList({})
             // if(featuredPlaylist.code == 1){
             //     result.featuredPlaylist = featuredPlaylist
             // }
-            const [topChart] = await database.query("SELECT * FROM tbl_song WHERE is_active = 1 AND is_deleted = 0 ORDER BY play_count")
-            if(topChart.length > 0) {
+            const [topChart] = await database.query("SELECT * FROM tbl_song WHERE is_active = 1 AND is_deleted = 0 ORDER BY play_count DESC")
+            if (topChart.length > 0) {
                 result.topChart = topChart
             }
             const [genere] = await database.query("SELECT * FROM tbl_category WHERE is_active = 1 AND is_deleted = 0")
-            if(genere.length>0){
+            if (genere.length > 0) {
                 result.genere = genere
             }
             const [mood] = await database.query("SELECT distinct mood FROM tbl_song WHERE is_active = 1 AND is_deleted = 0")
-            if(mood.length>0){
+            if (mood.length > 0) {
                 result.mood = mood
+            }
+            const [topArtist] = await database.query("SELECT a.*, COUNT(s.play_count) as play_count FROM tbl_artist a JOIN tbl_artist_songs ats ON ats.artist_id = a.id JOIN tbl_song s ON ats.song_id = s.id GROUP BY a.name ORDER BY play_count DESC LIMIT 5")
+            if (topArtist.length > 0) {
+                result.topArtist = topArtist
+            }
+            const [podcast] = await database.query("SELECT * FROM tbl_podcast WHERE is_active=1 AND is_deleted=0 ORDER BY id DESC LIMIT 6")
+            if (podcast.length > 0) {
+                result.podcast = podcast
+            }
+            const [story] = await database.query("SELECT * FROM tbl_song_story WHERE is_active=1 AND is_deleted=0 ORDER BY id DESC LIMIT 6")
+            if (story.length > 0) {
+                result.story = story
             }
             return {
                 code: responseCode.SUCCESS,
                 keyword: "success",
                 data: result
             }
-        }catch(error){
+        } catch (error) {
             return {
                 code: OPERATION_FAILED,
                 keyword: "something_went_wrong",
@@ -871,7 +956,7 @@ class userModel {
             }
         }
     }
-    
+
     async updateProfile(requestData) {
         try {
             const userData = {
@@ -1064,26 +1149,26 @@ class userModel {
             }
         }
     }
-    async getSongFromFeaturedList(requestData){
-        try{
+    async getSongFromFeaturedList(requestData) {
+        try {
             const [result] = await database.query(
                 `SELECT f.*, c.name as category_name 
                 FROM tbl_featured_playlist as f 
                 JOIN tbl_category as c ON c.id = f.category_id 
                 WHERE f.is_active = 1 AND f.is_deleted = 0 
                 AND c.is_active = 1 AND c.is_deleted = 0 
-                AND f.id = ?`, 
+                AND f.id = ?`,
                 [requestData.id]
             );
-            
-            if(result.length <= 0){
+
+            if (result.length <= 0) {
                 return {
                     code: responseCode.NO_DATA_FOUND,
                     keyword: "no_data_found",
                     data: "No Featured Playlist Found!"
                 }
             }
-            
+
             const [songs] = await database.query(
                 `SELECT DISTINCT s.*, a.name as artist_name, 
                 (SELECT GROUP_CONCAT(art.name SEPARATOR ', ') 
@@ -1100,32 +1185,366 @@ class userModel {
                 JOIN tbl_artist a ON a.id = ar.artist_id
                 JOIN tbl_category c ON c.id = s.category_id
                 JOIN tbl_featured_playlist_song fs ON fs.song_id = s.id
-                WHERE s.is_deleted = 0 AND s.is_active = 1 AND fs.featured_id = ?`, 
+                WHERE s.is_deleted = 0 AND s.is_active = 1 AND fs.featured_id = ?`,
                 [requestData.user_id, requestData.id]
             );
-            
-            if(songs.length <= 0){
+
+            if (songs.length <= 0) {
                 return {
                     code: responseCode.NO_DATA_FOUND,
                     keyword: "no_songs_found",
                     data: "No Songs Found in This Playlist"
                 }
             }
-            
+
             result[0].songs = songs;
             return {
                 code: responseCode.SUCCESS,
                 keyword: "success",
                 data: result[0]
             }
-        }catch(error){
-            return{
-                code : OPERATION_FAILED,
-                keyword : "something_went_wrong",
-                data : error
+        } catch (error) {
+            return {
+                code: OPERATION_FAILED,
+                keyword: "something_went_wrong",
+                data: error
             }
         }
     }
+
+    //PodCast
+
+    async getAllPodCast(requestData) {
+        try {
+            let data;
+            if (requestData.recommended) {
+                const [result] = await database.query(`SELECT * FROM tbl_podcast 
+                                            WHERE LOWER(title) = (
+                                                SELECT LOWER(title) 
+                                                FROM tbl_podcast 
+                                                WHERE id = ?
+                                            ) OR LOWER(taken_by) = (
+                                                SELECT LOWER(taken_by) 
+                                                FROM tbl_podcast 
+                                                WHERE id = ?
+                                            );
+                                            `, [requestData.id, requestData.id])
+
+                if (result.length <= 0) {
+                    const [result] = await database.query("SELECT *FROM tbl_podcast WHERE is_active=1 AND is_deleted = 0")
+                    if (result.length <= 0) {
+                        return {
+                            code: responseCode.NO_DATA_FOUND,
+                            keyword: "not_found",
+                            data: "No Data Fetch !"
+                        }
+                    }
+                    data = result
+                } else {
+                    data = result
+                }
+            } else {
+                let query = `SELECT * FROM tbl_podcast WHERE is_active = 1 AND is_deleted = 0`
+                if (requestData.id) {
+                    query += ` AND id = ${requestData.id}`
+                }
+                const [result] = await database.query(query)
+                if (result.length <= 0) {
+                    return {
+                        code: responseCode.NO_DATA_FOUND,
+                        keyword: "not_found",
+                        data: "No Data Fetch !"
+                    }
+                } else {
+                    data = result.length == 1 ? result[0] : result
+                }
+            }
+            return {
+                code: responseCode.SUCCESS,
+                keyword: "success",
+                data
+            }
+        } catch (error) {
+            return {
+                code: OPERATION_FAILED,
+                keyword: "something_went_wrong",
+                data: error
+            }
+        }
+    }
+
+    //Song Story
+
+    async getAllStory(requestData) {
+        try {
+            let query = "SELECT * FROM tbl_song_story WHERE is_active = 1 AND is_deleted=0";
+            if (requestData.id) {
+                query += ` AND id = ${requestData.id}`
+                const [result] = await database.query(query);
+                if (result.length <= 0) {
+                    return {
+                        code: responseCode.NO_DATA_FOUND,
+                        keyword: "no_data_found",
+                        data: "There is Story !"
+                    }
+                }
+                let [recommeded] = await database.query(`SELECT * FROM tbl_song_story WHERE is_active = 1 AND is_deleted=0 AND id !=? AND 
+                    (
+                        LOWER(title) = (SELECT LOWER(title) FROM tbl_song_story WHERE id = ?)
+                        OR LOWER(star_name) = (SELECT LOWER(star_name) FROM tbl_song_story WHERE id = ?)
+                    )`, [requestData.id, requestData.id, requestData.id])
+
+                if (recommeded.length <= 0) {
+                    [recommeded] = await database.query(
+                        "SELECT * FROM tbl_song_story WHERE is_active = 1 AND is_deleted=0 AND id != ? ORDER BY id DESC LIMIT 10",
+                        [requestData.id]
+                    );
+
+                    if (recommeded.length > 0) {
+                        result[0].recommeded = recommeded; // attach recommended stories
+                    } else {
+                        result[0].recommeded = "There are No Recommended Stories";
+                    }
+                } else {
+                    result[0].recommeded = recommeded;
+                }
+
+                return {
+                    code: responseCode.SUCCESS,
+                    keyword: "success",
+                    data: result[0]
+                };
+
+            }
+            query += " ORDER BY id DESC"
+            const [result] = await database.query(query)
+            if (result.length <= 0) {
+                return {
+                    code: responseCode.NO_DATA_FOUND,
+                    keyword: "no_data_found",
+                    data: "No Story Found"
+                }
+            }
+
+            return {
+                code: responseCode.SUCCESS,
+                keyword: "success",
+                data: result
+            }
+
+        } catch (error) {
+            return {
+                code: OPERATION_FAILED,
+                keyword: "something_went_wrong",
+                data: error
+            }
+        }
+    }
+
+    //Genere
+    async getGenere(requestData) {
+        try {
+            const [result] = await database.query("SELECT * FROM tbl_category WHERE is_active = 1 AND is_deleted = 0");
+            if (result.length <= 0) {
+                return {
+                    code: responseCode.NO_DATA_FOUND,
+                    keyword: "no_data_found",
+                    data: "There is Category !"
+                }
+            }
+            return {
+                code: responseCode.SUCCESS,
+                keyword: "success",
+                data: result
+            }
+        } catch (error) {
+            return {
+                code: OPERATION_FAILED,
+                keyword: "something_went_wrong",
+                data: error
+            }
+        }
+    }
+
+    //Genere PlayList And Songs
+    async getGenereSongs(requestData) {
+        try {
+            let result = {}
+            let [genere] = await database.query("SELECT * FROM tbl_category WHERE id = ? AND is_active = 1 AND is_deleted = 0", [requestData.id])
+            if (genere.length <= 0) {
+                return {
+                    code: responseCode.NO_DATA_FOUND,
+                    keyword: "no_data_found",
+                    data: "No Category Found !"
+                }
+            }
+            result.genere = genere[0]
+            let [getSongs] = await database.query(`SELECT s.* FROM tbl_song as s
+                WHERE s.category_id = ?`, [requestData.id])
+            let [getFeaturePlayList] = await database.query("SELECT * FROM tbl_featured_playlist WHERE category_id = ?", [requestData.id])
+            if (getSongs.length > 0) {
+                result.getSongs = getSongs
+            }
+            if (getFeaturePlayList) {
+                result.getFeaturePlayList = getFeaturePlayList
+            }
+            return {
+                code: responseCode.SUCCESS,
+                keyword: "success",
+                data: result
+            }
+        } catch (error) {
+            return {
+                code: OPERATION_FAILED,
+                keyword: "something_went_wrong",
+                data: error
+            }
+        }
+    }
+
+    //All Artist
+    async getAllArtist(requestData) {
+        try {
+            let query = `SELECT * FROM tbl_artist WHERE is_active = 1 AND is_deleted = 0`
+            if (requestData.id) query += ` AND id = ${requestData.id}`
+            const [result] = await database.query(query)
+            if (result.length <= 0) {
+                return {
+                    code: responseCode.NO_DATA_FOUND,
+                    keyword: "not_found",
+                    data: "No Data Found !"
+                }
+            }
+            return {
+                code: responseCode.SUCCESS,
+                keyword: "success",
+                data: result.length == 1 ? result[0] : result
+            }
+        } catch (error) {
+            return {
+                code: OPERATION_FAILED,
+                keyword: "something_went_wrong",
+                data: error
+            }
+        }
+    }
+
+    //ArtistSongs
+    async artistSongs(requestData) {
+        try {
+            const [result] = await database.query(`
+                SELECT DISTINCT s.*, a.name as artist_name, 
+                (SELECT GROUP_CONCAT(art.name SEPARATOR ', ') 
+                 FROM tbl_artist as art 
+                 JOIN tbl_artist_songs as artsng ON artsng.artist_id = art.id 
+                 WHERE artsng.song_id = s.id) as all_artist_name,
+                a.bio, a.profile_picture, c.name as genre,
+                 CASE 
+                    WHEN EXISTS(SELECT 1 FROM tbl_likes WHERE user_id = ? AND song_id = s.id) THEN "LIKED"
+                    ELSE "NOTLIKED"
+                END as LIKESTATUS
+                FROM tbl_song s
+                JOIN tbl_artist_songs ar ON ar.song_id = s.id
+                JOIN tbl_artist a ON a.id = ar.artist_id
+                JOIN tbl_category c ON c.id = s.category_id
+                WHERE s.is_deleted = 0 AND s.is_active = 1 AND ar.artist_id = ?
+            `, [requestData.user_id, requestData.id]);
+
+            if (result.length <= 0) {
+                return {
+                    code: responseCode.NO_DATA_FOUND,
+                    keyword: "no_data_found",
+                    data: "No Song Found !"
+                }
+            }
+
+            return {
+                code: responseCode.SUCCESS,
+                keyword: "success",
+                data: result
+            }
+
+        } catch (error) {
+            return {
+                code: OPERATION_FAILED,
+                keyword: "something_went_wrong",
+                data: error
+            }
+        }
+    }
+
+    //Discover
+
+
+    async discover(requestData) {
+        try {
+            let result = {};
+
+            let queryFirst = `
+                            SELECT DISTINCT s.*, a.name as artist_name, 
+                                (SELECT GROUP_CONCAT(art.name SEPARATOR ', ') 
+                                FROM tbl_artist as art 
+                                JOIN tbl_artist_songs as artsng ON artsng.artist_id = art.id 
+                                WHERE artsng.song_id = s.id) as all_artist_name,
+                                a.bio, a.profile_picture, c.name as genre,
+                                CASE 
+                                WHEN EXISTS(SELECT 1 FROM tbl_likes WHERE user_id = ? AND song_id = s.id) 
+                                    THEN "LIKED"
+                                ELSE "NOTLIKED"
+                                END as LIKESTATUS
+                            FROM tbl_song s
+                            JOIN tbl_artist_songs ar ON ar.song_id = s.id
+                            JOIN tbl_artist a ON a.id = ar.artist_id
+                            JOIN tbl_category c ON c.id = s.category_id 
+                            `;
+
+            let secondQuery = `WHERE s.is_deleted = 0 AND s.is_active = 1`;
+
+            // Latest Songs (last 14 days)
+            let latestQuery = queryFirst + secondQuery +
+                ` AND DATE(s.release_date) > DATE_ADD(DATE(NOW()), INTERVAL -14 DAY)`;
+            const [latest] = await database.query(latestQuery, [requestData.user_id]);
+            if (latest.length > 0) result.latest = latest;
+
+            // Recommended Songs (based on likes)
+            let recommededQuery = queryFirst + secondQuery + `
+                                            AND a.id IN (
+                                                SELECT DISTINCT a1.id 
+                                                FROM tbl_likes as l
+                                                JOIN tbl_song as s1 ON s1.id = l.song_id
+                                                JOIN tbl_artist_songs as asng ON asng.song_id = s1.id
+                                                JOIN tbl_artist as a1 ON a1.id = asng.artist_id
+                                                WHERE l.user_id = ? AND a1.is_active=1 AND a1.is_deleted=0
+                                            )
+                                            `;
+            const [recommeded] = await database.query(recommededQuery, [requestData.user_id, requestData.user_id]);
+            if (recommeded.length > 0) result.recommended = recommeded;
+
+            // Latest Podcast (last 14 days)
+            let latestPodCastQuery = `
+                                        SELECT * 
+                                        FROM tbl_podcast 
+                                        WHERE is_active = 1 
+                                            AND is_deleted = 0 
+                                            AND DATE(created_at) > DATE_ADD(DATE(NOW()), INTERVAL -14 DAY)
+                                        `;
+            const [latestPodcast] = await database.query(latestPodCastQuery);
+            if (latestPodcast.length > 0) result.latestPodcast = latestPodcast;
+
+            return {
+                code: responseCode.SUCCESS,
+                keyword: "success",
+                data: result
+            };
+        } catch (error) {
+            return {
+                code: OPERATION_FAILED,
+                keyword: "something_went_wrong",
+                data: error
+            };
+        }
+    }
+
 
 }
 

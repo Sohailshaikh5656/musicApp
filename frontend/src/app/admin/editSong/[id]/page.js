@@ -4,13 +4,14 @@ import { useState, useEffect } from "react"
 import { Audio } from "react-loader-spinner"
 import * as Yup from 'yup'
 import Layout from "../../common/layout"
-import { getAllArtist, getCategory, getSong, uploadImage } from "@/app/utils/apiHandler"
-import { updateSong } from "@/app/utils/apiHandler"
+import {  uploadImage } from "@/app/utils/apiHandler"
+import { updateSong } from "@/app/utils/adminApi"
 import { useSession } from "next-auth/react"
-import { addSong } from "@/app/utils/apiHandler"
+import { addSong } from "@/app/utils/adminApi"
 import { ToastContainer, toast } from "react-toastify"
 import { useParams } from "next/navigation"
 import { useRouter } from "next/navigation"
+import { getAllArtist, getCategory, getSong } from "@/app/utils/adminApi"
 
 const EditSong = () => {
     const params = useParams()

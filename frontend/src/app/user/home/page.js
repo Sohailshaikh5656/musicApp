@@ -21,24 +21,11 @@ import LocalArtist from "../userComponents/homePage/localArtist"
 import UserPlayList from "../userComponents/homePage/userPlayList"
 import { ToastContainer, toast } from "react-toastify"
 // import Testimonial from "../userComponents/homePage/Testimonial"
-const notify = (msg) => {
-    toast(msg, {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-    });
-}
-
 const Home = () =>{
     return (
         <Layout>
             {/* Hero HeroSection */}
-            <HeroSection></HeroSection>
+            {/* <HeroSection></HeroSection>
             <UserPlayList></UserPlayList>
             <FeaturedPlayList></FeaturedPlayList>
             <TopChart></TopChart>
@@ -56,7 +43,7 @@ const Home = () =>{
             <AwardAndAchivement></AwardAndAchivement>
             <MusicEducation></MusicEducation>
             <ReviewSection ></ReviewSection>
-            <LocalArtist></LocalArtist>
+            <LocalArtist></LocalArtist> */}
         </Layout>
     )
 }

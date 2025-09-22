@@ -7,7 +7,7 @@ import * as Yup from 'yup';
 import Layout from "../../common/layout";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
-import { editUser, updateUser } from "@/app/utils/apiHandler"
+import { editUser, updateUser } from "@/app/utils/adminApi";
 import { useRouter } from "next/navigation";
 import Loader from "../../common/loader";
 import { Audio } from 'react-loader-spinner';

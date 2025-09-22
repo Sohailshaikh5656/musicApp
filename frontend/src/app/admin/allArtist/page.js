@@ -9,10 +9,10 @@ import { useRouter } from "next/navigation";
 import useAuthSession from "@/app/components/getSession";
 import Loader from "../common/loader";
 import { useRef } from "react";
-import { deleteArtist } from "@/app/utils/apiHandler";
+import { deleteArtist } from "@/app/utils/adminApi";
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
-import { blockArtist } from "@/app/utils/apiHandler";
+import { blockArtist } from "@/app/utils/adminApi";
 
 const AllArtistPage = () => {
   const route = useRouter();

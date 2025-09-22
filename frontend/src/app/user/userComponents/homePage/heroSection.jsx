@@ -69,7 +69,7 @@ const HeroSection = () => {
                                     <div className="d-flex gap-2 align-items-center">
                                         <span className="badge bg-primary rounded-pill px-3 py-1">{result.genere}</span>
                                         <span className="text-danger" title="Likes" style={{padding: '0 8px'}}>
-                                            <i className="bi bi-heart-fill me-1"></i>{result.likes || 0}
+                                            <i className="bi bi-heart-fill me-1"></i>{result?.total_likes || 0}
                                         </span>
                                         <span className="text-success" onClick={(e)=>{e.stopPropagation(); router.push(`/user/showPlaylist/${result.id}`)}} title="Add to Playlist" style={{padding: '0 8px', cursor: 'pointer'}}>
                                             <i className="bi bi-music-note-list me-1"></i>

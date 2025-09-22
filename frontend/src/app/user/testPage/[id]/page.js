@@ -5,16 +5,11 @@ import Layout from "../../common/layout"
 import { useParams } from "next/navigation"
 import { useRouter } from "next/navigation"
 import { useSession } from "next-auth/react"
-import { getAllFeaturedPlayListSong } from "@/app/utils/apiHandler"
 import { FaPlay, FaPause, FaStepForward, FaStepBackward, FaHeart, FaRegHeart, FaRandom, FaVolumeUp, FaVolumeMute, FaMusic, FaShare, FaComment, FaEllipsisH } from "react-icons/fa"
 import { GiMicrophone } from "react-icons/gi"
 import { IoMdShare } from "react-icons/io"
 import { BsGraphUp } from "react-icons/bs"
-import { postComments } from "@/app/utils/apiHandler"
-import { likeStateManage } from "@/app/utils/apiHandler"
-import { playCountUpdate } from "@/app/utils/apiHandler"
-import { getComments, getUserSong } from "@/app/utils/apiHandler"
-
+import { getComments, getUserSong, likeStateManage, playCountUpdate, postComments, getAllFeaturedPlayListSong } from "@/app/utils/userApi"
 const FeaturedPlayList = () => {
     const params = useParams()
     const audioRef = useRef(null)

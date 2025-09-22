@@ -30,6 +30,12 @@ const userRoute = (app)=>{
     app.get("/v1/user/search/:keyword",userInstance.searchSong);
     app.post("/v1/user/playList",userInstance.newPlayList);
     app.get("/v1/user/playList",userInstance.getAllPlayList);
+    app.get("/v1/user/playList/:id",userInstance.getAllPlayList);
+    app.put("/v1/user/playList",userInstance.updatePlaylist);
+
+    //delete PlayList Songs
+    app.delete("/v1/user/playList/:song_id/:playlist_id",userInstance.deletePlayListSongs);
+
     app.get("/v1/user/playlist-songs/:id",userInstance.getPlayListSongs);
     app.post("/v1/user/addtoplaylist", userInstance.addPlayListSong);
     app.get("/v1/user/featuredPlaylist/:id", userInstance.getFeaturedPlayList);
@@ -38,6 +44,37 @@ const userRoute = (app)=>{
     app.get("/v1/user/featuredPlaylistSong/:id", userInstance.getSongFromFeaturedList);
     //HomePage
     app.get("/v1/user/homepage", userInstance.homepage);
+    
+    //PodCast
+    app.get("/v1/user/podcast", userInstance.getAllPodCast);
+    app.get("/v1/user/podcast/:id", userInstance.getAllPodCast);
+    app.get("/v1/user/podcast/:id/:recommended", userInstance.getAllPodCast);
+    
+    //Story
+    app.get("/v1/user/story", userInstance.getAllStory);
+    app.get("/v1/user/story/:id", userInstance.getAllStory);
+
+
+    app.get("/v1/user/genere/:id", userInstance.getGenereSongs);
+    
+    //Artist
+    app.get("/v1/user/artistList/:id", userInstance.getAllArtist);
+    app.get("/v1/user/artistList", userInstance.getAllArtist);  
+    
+    //pages
+    app.get("/v1/user/genereList", userInstance.getGenere);
+    //Artist Songs
+    app.get("/v1/user/artistSongs/:id", userInstance.artistSongs);
+    
+    //Discover
+    app.get("/v1/user/discover", userInstance.discover);
+
+
+
+
+
+
+
 
 }
 module.exports = userRoute

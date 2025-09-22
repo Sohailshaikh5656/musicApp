@@ -61,7 +61,13 @@ const AddSongToFeaturePlayList = () => {
             setLoading(true)
             const res = await getAllFeaturedPlayList({ jwtToken: session?.user?.jwtToken })
             if (res.code == 1) {
-                setFeaturedPlayList(res.data)
+                if(!Array.isArray(res.data)){
+                    let arr = []
+                    arr.push(res.data)
+                    setFeaturedPlayList(arr)
+                }else{
+                    setFeaturedPlayList(res.data)
+                }
             } else {
                 notify(res.message)
             }

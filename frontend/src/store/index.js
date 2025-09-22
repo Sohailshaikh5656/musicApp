@@ -1,8 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
-import userSliceReducer from "./slice/allSlicer"
+import adminSlicerReducer from "./slice/allSlicer"
+import userSlicerReducer from "./slice/userSlicer"
 
 export const store = configureStore({
     reducer : {
-        allSlicer : userSliceReducer,
+        allSlicer : adminSlicerReducer,
+        userAllSlicer : userSlicerReducer
     }
 })

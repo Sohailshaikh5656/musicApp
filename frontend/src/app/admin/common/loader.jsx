@@ -1,6 +1,7 @@
 import { LineWave } from "react-loader-spinner";
 const Loader = () => {
     return (
+        <div className="d-flex justify-content-center align-item-center" style={{minHeight:"100vh"}}>
             <div className="loader">
                 <LineWave
                     visible={true}
@@ -15,6 +16,7 @@ const Loader = () => {
                     lastLineColor=""
                     />
             </div>
+        </div>
             )
 
 }

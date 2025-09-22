@@ -5,6 +5,7 @@ import { useSession } from 'next-auth/react';
 import { getAllArtist } from '@/app/utils/apiHandler';
 import { getAllUser } from '@/app/utils/apiHandler';
 import { getSong } from "@/app/utils/apiHandler";
+import { getAllStory } from "@/app/utils/userApi";
 
 export const fetchAllArtist = createAsyncThunk(
     "users/fetchAllArtist",
@@ -81,6 +82,7 @@ export const fetchAllSong = createAsyncThunk(
       return response.data
     }
 )
+
   
 const userSlice = createSlice({
     name : "mySlice",

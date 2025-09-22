@@ -1,30 +1,175 @@
-const MoodBased = () => {
+"use client"
+import Link from "next/link"
+import { useRouter } from "next/navigation"
+const MoodBased = ({data}) => {
+    const router = useRouter()
+    
     return (
-        <section className="container py-5">
-            <h2 className="fw-bold mb-5">Playlists For Every Mood</h2>
-            <div className="row g-4">
-                <div className="col-6 col-md-3">
-                    <div className="mood-card" style={{background: "linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80') center/cover"}}>
-                        <h5 className="mood-label">Chill</h5>
+      <div className="container mt-4 mb-5">
+        <h2 className="fw-bold mb-5">Mood Genere</h2>
+        
+        {/* Compact genre cards with horizontal expand on hover */}
+        <div className="genre-container mt-4">
+          {data && data.length > 0 ? (
+            <div className="genre-grid">
+              {data.map((item, index) => (
+                <div key={index} className="genre-card">
+                  <div className="genre-image-container">
+                    <img
+                      src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${item.image}`}
+                      alt={item.name}
+                      className="genre-img"
+                    />
+                    <div className="genre-overlay">
+                      <h5 className="genre-name">{item.name}</h5>
+                      <div className="genre-actions">
+                        <Link className="btn btn-dark rounded-pill px-3 py-2" href={`/user/generePlayList/${item.id}`}>
+                          Listen Now
+                        </Link>
+                      </div>
                     </div>
+                  </div>
                 </div>
-                <div className="col-6 col-md-3">
-                    <div className="mood-card" style={{background: "linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1470225620780-dba8ba36b745?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80') center/cover"}}>
-                        <h5 className="mood-label">Energetic</h5>
-                    </div>
-                </div>
-                <div className="col-6 col-md-3">
-                    <div className="mood-card" style={{background: "linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3), url('https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80') center/cover"}}>
-                        <h5 className="mood-label">Focus</h5>
-                    </div>
-                </div>
-                <div className="col-6 col-md-3">
-                    <div className="mood-card" style={{background: "linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1496293455970-f8581aae0e3b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2013&q=80') center/cover"}}>
-                        <h5 className="mood-label">Romantic</h5>
-                    </div>
-                </div>
+              ))}
             </div>
-        </section>
+          ) : (
+            <h5 className="text-center text-muted">No Genre Found!</h5>
+          )}
+        </div>
+        
+        <style jsx>{`
+          .genre-container {
+            padding: 0 15px;
+          }
+            .container{
+                margin-bottom:200px;
+            }
+          
+          .genre-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+          }
+          
+          .genre-card {
+            position: relative;
+            width: 100px;
+            height: 320px;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            flex-shrink: 0;
+          }
+          
+          .genre-card:hover {
+            width: 400px;
+            z-index: 10;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+          }
+          
+          .genre-image-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+          }
+          
+          .genre-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+          }
+          
+          .genre-card:hover .genre-img {
+            transform: scale(1.05);
+          }
+          
+          .genre-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 15px;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+          }
+          
+          .genre-card:hover .genre-overlay {
+            opacity: 1;
+            backdrop-filter: blur(5px);
+          }
+          
+          .genre-name {
+            font-weight: 700;
+            font-size: 0;
+            margin: 0;
+            color: white;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
+            text-align: center;
+            transition: all 0.3s ease 0.2s;
+          }
+          
+          .genre-card:hover .genre-name {
+            font-size: 24px;
+            margin-bottom: 15px;
+          }
+          
+          .genre-actions {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease 0.3s;
+          }
+          
+          .genre-card:hover .genre-actions {
+            opacity: 1;
+            transform: translateY(0);
+          }
+          
+          @media (max-width: 768px) {
+            .genre-card {
+              width: 60px;
+              height: 170px;
+            }
+            
+            .genre-card:hover {
+              width: 350px;
+            }
+            
+            .genre-grid {
+              gap: 12px;
+            }
+          }
+          
+          @media (max-width: 576px) {
+            .genre-card {
+              width: 50px;
+              height: 140px;
+            }
+            
+            .genre-card:hover {
+              width: 300px;
+            }
+            
+            .genre-grid {
+              gap: 10px;
+            }
+            
+            .genre-card:hover .genre-name {
+              font-size: 20px;
+            }
+          }
+        `}</style>
+      </div>
     )
 }
-export  default MoodBased
+
+export default MoodBased

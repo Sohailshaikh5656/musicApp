@@ -32,7 +32,8 @@ const adminRoute = (app)=>{
     app.delete("/v1/admin/playListSongs/:id/:song_id",adminInstance.deletePlayListSong);
     app.get("/v1/admin/playList",adminInstance.getAllUserPlayList);
     //Featured playList : 
-    app.put("/v1/admin/featuredPlayList/:id", adminInstance.updateFeaturePlayList);
+    // app.put("/v1/admin/featuredPlayList/:id", adminInstance.updateFeaturePlayList);
+    app.put("/v1/admin/featuredPlayList", adminInstance.updateFeaturedPlayList);
     app.delete("/v1/admin/featuredPlayList/:id", adminInstance.deleteFeaturePlayList);
     app.get("/v1/admin/featuredPlayList",adminInstance.getAllFeaturedplayList);
     app.get("/v1/admin/featuredPlayList/:id",adminInstance.getAllFeaturedplayList);
@@ -41,6 +42,20 @@ const adminRoute = (app)=>{
     app.post("/v1/admin/featuredPlayListSong",adminInstance.addSongFeaturedPlaylist);
     app.delete("/v1/admin/featuredPlayListSong/:featured_id/:song_id", adminInstance.deleteSongFromFeaturedPlaylist);
     app.put("/v1/admin/featuredPlayListSong/:featured_id/:song_id", adminInstance.activeInactiveFeaturedPlaylistSong);
+    
+    //PodCast
+    app.post("/v1/admin/podcast", adminInstance.addPodCast);
+    app.get("/v1/admin/podcast", adminInstance.getAllPodCast);
+    app.get("/v1/admin/podcast/:id", adminInstance.getAllPodCast);
+    app.put("/v1/admin/podcast", adminInstance.updatePodCast);
+    app.delete("/v1/admin/podcast/:id", adminInstance.deletePodCast);
+    
+    //Story
+    app.post("/v1/admin/story", adminInstance.addStory);
+    app.get("/v1/admin/story", adminInstance.getAllStory);
+    app.get("/v1/admin/story/:id", adminInstance.getAllStory);
+    app.put("/v1/admin/story", adminInstance.updateStory);
+    app.delete("/v1/admin/story/:id", adminInstance.deleteStory);
 
 }
 module.exports = adminRoute

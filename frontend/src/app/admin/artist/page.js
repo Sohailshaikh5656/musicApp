@@ -4,9 +4,10 @@ import Layout from "../common/layout"
 import * as Yup from "yup"
 import { useFormik } from 'formik';
 import { useSession } from 'next-auth/react';
-import { uploadImage, AddArtist } from '@/app/utils/apiHandler';
+import { uploadImage } from '@/app/utils/apiHandler';
 import { Audio } from "react-loader-spinner";
 import { ToastContainer, toast } from "react-toastify";
+import { addArtist } from '@/app/utils/adminApi';
 
 const NewArtist = () => {
     const [btn, setBtn] = useState(false)
@@ -60,7 +61,7 @@ const NewArtist = () => {
                     artistData.profile_picture = fileResponse.data;
                     console.log("This is Stored File :", artistData.profile_picture);
                     artistData.jwtToken = session?.user?.jwtToken
-                    const response = await AddArtist(artistData);
+                    const response = await addArtist(artistData);
                     console.log("this is Final Response : ", response)
                     if (response?.code == 1) {
                         notify("Successfully Artist Added !")
