@@ -59,28 +59,28 @@ Currently, the project is still in the **upgradation phase** 🚀.
 ⚠️ Note: Run backend & frontend in separate terminals.
 
 🌟 Features<br/>
-👤 User Features<br/>
-1. 🔑 Sign In & Sign Up (Normal + Social Login)
-2. 🎵 Music Listing with Lyrics
-3. ❤️ Like Songs, 💬 Comment on Tracks
-4. 🔀 Shuffle & 🎧 Recommended songs
-5. 📌 Coming Up Next Queue
-6. 🎶 Create New Playlists
-7. 🌍 Explore Genres, Stories & Podcasts
-8. ⭐ Featured Playlists
+  👤 User Features<br/>
+  1. 🔑 Sign In & Sign Up (Normal + Social Login)
+  2. 🎵 Music Listing with Lyrics
+  3. ❤️ Like Songs, 💬 Comment on Tracks
+  4. 🔀 Shuffle & 🎧 Recommended songs
+  5. 📌 Coming Up Next Queue
+  6. 🎶 Create New Playlists
+  7. 🌍 Explore Genres, Stories & Podcasts
+  8. ⭐ Featured Playlists
 
-🛠 Admin Features<br/>
-1. 🎵 Song CRUD (Add, Update, Delete Songs)
-2. ⭐ Manage Featured Playlists
-3. 🎙 Manage Podcasts & Stories
-4. 🎼 Manage Categories / Genres
-5. 🔑 Admin Authentication
-6. 📊 Dashboard & More Advanced Features
+  🛠 Admin Features<br/>
+  1. 🎵 Song CRUD (Add, Update, Delete Songs)
+  2. ⭐ Manage Featured Playlists
+  3. 🎙 Manage Podcasts & Stories
+  4. 🎼 Manage Categories / Genres
+  5. 🔑 Admin Authentication
+  6. 📊 Dashboard & More Advanced Features
 
-🔮 Upcoming Features<br/>
-  👤 User Profile<br/>
-  🎶 View & Manage Liked Songs<br/>
-  💬 Comment Tracking<br/>
+🔮 Upcoming Features<br/>&nbps;
+  👤 User Profile<br/>&nbps;
+  🎶 View & Manage Liked Songs<br/>&nbps;
+  💬 Comment Tracking<br/>&nbps;
 
 📸 Project Screenshots & Demo\
 
