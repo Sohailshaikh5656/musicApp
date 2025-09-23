@@ -55,7 +55,7 @@ const MusicPlayer = ({data=[]}) => {
   const [playCount, setPlayCount] = useState(0)
   const [volumePercentage, setVolumePercentage] = useState("80%")
   const [playCounted, setPlayCounted] = useState(false)
-  const [showSongDetails, setShowSongDetails] = useState(false)
+  // const [showSongDetails, setShowSongDetails] = useState(false)
 
   // Generate unique key for list items - memoize this function with useMemo
   const generateUniqueKey = useMemo(() => {
@@ -336,289 +336,60 @@ const MusicPlayer = ({data=[]}) => {
   }, [nextSongs])
 
   // Song Details Modal
-  const SongDetailsModal = useCallback(() => {
-    if (!currentSong || !showSongDetails) return null;
+  // const SongDetailsModal = useCallback(() => {
+  //   if (!currentSong) return null;
 
-    return (
-     const SongDetailsModal = useCallback(() => {
-  if (!currentSong || !showSongDetails) return null;
-
-  return (
-    <div className="modal-backdrop" onClick={() => setShowSongDetails(false)}>
-      <div className="song-details-modal" onClick={(e) => e.stopPropagation()}>
-        <div className="modal-header">
-          <h3>
-            <FaInfoCircle className="me-2" />
-            Song Details
-          </h3>
-          <button className="close-btn" onClick={() => setShowSongDetails(false)}>×</button>
-        </div>
-        
-        <div className="modal-content">
-          {/* Album Cover and Basic Info */}
-          <div className="row mb-4">
-            <div className="col-md-4 text-center">
-              <img
-                src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${currentSong.cover_image}`}
-                className="img-fluid rounded"
-                alt="Album Cover"
-                onError={(e) => {
-                  e.target.src = '/default-album.png'
-                }}
-              />
-            </div>
-            <div className="col-md-8">
-              <h4 className="text-primary">{currentSong.title}</h4>
-              <p className="text-muted">
-                <FaUser className="me-2" />
-                {currentSong.all_artist_name || currentSong.artist_name}
-              </p>
-              <div className="d-flex flex-wrap gap-2 mt-3">
-                <span className="badge bg-info">
-                  <FaMusic className="me-1" />
-                  {currentSong.genre || "Unknown Genre"}
-                </span>
-                <span className="badge bg-secondary">
-                  <FaGlobe className="me-1" />
-                  {currentSong.language}
-                </span>
-                <span className="badge bg-success">
-                  <FaHeart className="me-1" />
-                  {currentSong.mood}
-                </span>
-              </div>
-            </div>
-          </div>
-
-          {/* Details Grid */}
-          <div className="row">
-            <div className="col-md-6">
-              <div className="detail-item">
-                <FaCalendarAlt className="detail-icon" />
-                <div className="detail-content">
-                  <span className="detail-label">Release Date</span>
-                  <span className="detail-value">
-                    {new Date(currentSong.release_date).toLocaleDateString() || "Unknown"}
-                  </span>
-                </div>
-              </div>
-              
-              <div className="detail-item">
-                <FaClock className="detail-icon" />
-                <div className="detail-content">
-                  <span className="detail-label">Duration</span>
-                  <span className="detail-value">
-                    {formatTime(currentSong.duration || duration)}
-                  </span>
-                </div>
-              </div>
-              
-              <div className="detail-item">
-                <FaHeadphones className="detail-icon" />
-                <div className="detail-content">
-                  <span className="detail-label">Play Count</span>
-                  <span className="detail-value">{currentSong.play_count || playCount}</span>
-                </div>
-              </div>
-              
-              <div className="detail-item">
-                <FaHeart className="detail-icon" />
-                <div className="detail-content">
-                  <span className="detail-label">Likes</span>
-                  <span className="detail-value">{currentSong.total_likes || 0}</span>
-                </div>
-              </div>
-            </div>
-            
-            <div className="col-md-6">
-              <div className="detail-item">
-                <FaDrum className="detail-icon" />
-                <div className="detail-content">
-                  <span className="detail-label">BPM</span>
-                  <span className="detail-value">{currentSong.BPM || "N/A"}</span>
-                </div>
-              </div>
-              
-              <div className="detail-item">
-                <FaAlbum className="detail-icon" />
-                <div className="detail-content">
-                  <span className="detail-label">Album</span>
-                  <span className="detail-value">{currentSong.album_name || "Unknown Album"}</span>
-                </div>
-              </div>
-              
-              <div className="detail-item">
-                <FaDownload className="detail-icon" />
-                <div className="detail-content">
-                  <span className="detail-label">Downloads</span>
-                  <span className="detail-value">{currentSong.download_count || 0}</span>
-                </div>
-              </div>
-              
-              <div className="detail-item">
-                <FaExclamationTriangle className="detail-icon" />
-                <div className="detail-content">
-                  <span className="detail-label">Explicit</span>
-                  <span className="detail-value">{currentSong.explicit ? "Yes" : "No"}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Additional Information */}
-          {currentSong.bio && (
-            <div className="detail-section mt-4">
-              <h5>
-                <FaUser className="me-2" />
-                Artist Bio
-              </h5>
-              <p className="detail-text">{currentSong.bio}</p>
-            </div>
-          )}
-          
-          {currentSong.copyright_info && (
-            <div className="detail-section mt-3">
-              <h5>
-                <FaCopyright className="me-2" />
-                Copyright
-              </h5>
-              <p className="detail-text">{currentSong.copyright_info}</p>
-            </div>
-          )}
-          
-          {currentSong.description && (
-            <div className="detail-section mt-3">
-              <h5>
-                <FaAlignLeft className="me-2" />
-                Description
-              </h5>
-              <p className="detail-text">{currentSong.description}</p>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Add CSS for the modal */}
-      <style jsx>{`
-        .modal-backdrop {
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          background-color: rgba(0, 0, 0, 0.7);
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          z-index: 1000;
-        }
-        
-        .song-details-modal {
-          background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);
-          border-radius: 12px;
-          padding: 25px;
-          width: 90%;
-          max-width: 700px;
-          max-height: 80vh;
-          overflow-y: auto;
-          color: white;
-          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-          border: 1px solid #444;
-        }
-        
-        .modal-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 20px;
-          border-bottom: 1px solid #444;
-          padding-bottom: 15px;
-        }
-        
-        .modal-header h3 {
-          color: #1db954;
-          margin: 0;
-          display: flex;
-          align-items: center;
-        }
-        
-        .close-btn {
-          background: none;
-          border: none;
-          color: white;
-          font-size: 24px;
-          cursor: pointer;
-          transition: color 0.2s;
-        }
-        
-        .close-btn:hover {
-          color: #1db954;
-        }
-        
-        .detail-item {
-          display: flex;
-          align-items: center;
-          margin-bottom: 15px;
-          padding: 10px;
-          background: rgba(255, 255, 255, 0.05);
-          border-radius: 8px;
-        }
-        
-        .detail-icon {
-          font-size: 18px;
-          color: #1db954;
-          min-width: 30px;
-        }
-        
-        .detail-content {
-          margin-left: 12px;
-        }
-        
-        .detail-label {
-          display: block;
-          font-size: 12px;
-          color: #aaa;
-          text-transform: uppercase;
-          letter-spacing: 0.5px;
-        }
-        
-        .detail-value {
-          display: block;
-          font-weight: 500;
-          color: white;
-        }
-        
-        .detail-section {
-          padding: 15px;
-          background: rgba(255, 255, 255, 0.05);
-          border-radius: 8px;
-        }
-        
-        .detail-section h5 {
-          color: #1db954;
-          display: flex;
-          align-items: center;
-          margin-bottom: 10px;
-        }
-        
-        .detail-text {
-          color: #ddd;
-          line-height: 1.6;
-          margin: 0;
-        }
-        
-        .badge {
-          display: inline-flex;
-          align-items: center;
-          padding: 5px 10px;
-          border-radius: 15px;
-        }
-      `}</style>
-    </div>
-  );
-}, [currentSong, showSongDetails, duration, formatTime]);
-    );
-  }, [currentSong, showSongDetails, duration, formatTime]);
+  //   return (
+  //     <div className="modal-backdrop">
+  //       <div className="song-details-modal" onClick={(e) => e.stopPropagation()}>
+  //         <div className="modal-header">
+  //           <h3>Song Details</h3>
+  //           <button className="close-btn">×</button>
+  //         </div>
+  //         <div className="modal-content">
+  //           <div className="detail-row">
+  //             <span className="detail-label">Title:</span>
+  //             <span className="detail-value">{currentSong.title}</span>
+  //           </div>
+  //           <div className="detail-row">
+  //             <span className="detail-label">Artist:</span>
+  //             <span className="detail-value">{currentSong.all_artist_name || currentSong.artist_name}</span>
+  //           </div>
+  //           <div className="detail-row">
+  //             <span className="detail-label">Album:</span>
+  //             <span className="detail-value">{currentSong.album_name || "Unknown Album"}</span>
+  //           </div>
+  //           <div className="detail-row">
+  //             <span className="detail-label">Duration:</span>
+  //             <span className="detail-value">{formatTime(currentSong.duration || duration)}</span>
+  //           </div>
+  //           <div className="detail-row">
+  //             <span className="detail-label">Release Date:</span>
+  //             <span className="detail-value">{currentSong.release_date || "Unknown"}</span>
+  //           </div>
+  //           <div className="detail-row">
+  //             <span className="detail-label">Genre:</span>
+  //             <span className="detail-value">{currentSong.genre || "Unknown Genre"}</span>
+  //           </div>
+  //           <div className="detail-row">
+  //             <span className="detail-label">Play Count:</span>
+  //             <span className="detail-value">{currentSong.play_count || playCount}</span>
+  //           </div>
+  //           <div className="detail-row">
+  //             <span className="detail-label">Likes:</span>
+  //             <span className="detail-value">{currentSong.total_likes || 0}</span>
+  //           </div>
+  //           {currentSong.description && (
+  //             <div className="detail-row full-width">
+  //               <span className="detail-label">Description:</span>
+  //               <p className="detail-description">{currentSong.description}</p>
+  //             </div>
+  //           )}
+  //         </div>
+  //       </div>
+  //     </div>
+  //   );
+  // }, [currentSong, duration, formatTime]);
 
   if (loading) {
     return (
@@ -652,7 +423,7 @@ const MusicPlayer = ({data=[]}) => {
   return (
     <div className="music-player-container">
       {/* Song Details Modal */}
-      <SongDetailsModal />
+      {/* <SongDetailsModal /> */}
       
       {/* Main Player Section */}
       <div className="row">
@@ -743,7 +514,6 @@ const MusicPlayer = ({data=[]}) => {
                   </button>
                   <button
                     className="btn btn-icon mx-1"
-                    onClick={() => setShowSongDetails(true)}
                     aria-label="Song details"
                   >
                     <FaInfoCircle />
