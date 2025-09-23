@@ -84,12 +84,25 @@ Currently, the project is still in the **upgradation phase** 🚀.
 
 📸 Project Screenshots & Demo\
 <br />
+<hr />
 <img src='./screenshot/userSignUp.png' height=400>
+<br />
+<hr />
 <img src='./screenshot/userSignIn.png' height=400>
+<br />
+<hr />
 <img src='./screenshot/userHome.png' height=400>
+<br />
+<hr />
 <img src='./screenshot/userFeature1.png' height=400>
+<br />
+<hr />
 <img src='./screenshot/userFeature2.png' height=400>
+<br />
+<hr />
 <img src='./screenshot/userFeature3.png' height=400>
+<br />
+<hr />
 
 📂 Folder Structure
 ```bash 
